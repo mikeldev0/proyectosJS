@@ -1,6 +1,5 @@
 ---
 ---
-
 <header>
     <nav class="buttons-container">
         <a href="https://github.com/byronnDev" target="_blank" rel="noopener" class="nav-button">
@@ -15,23 +14,31 @@
                 />
             </svg>
         </a>
-        <a href="https://mikeldev.com" target="_blank" rel="noopener" class="nav-button">
+        <a href="https://www.mikeldev.com" target="_blank" rel="noopener" class="nav-button portfolio">
             Mi Portfolio
         </a>
     </nav>
 </header>
 
 <style>
+    header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
     .buttons-container {
         position: absolute;
         top: 1rem;
         right: 1rem;
         display: flex;
         gap: 1rem;
+        flex-wrap: wrap; /* Permitir que los botones se envuelvan en pantallas pequeñas */
     }
 
     .nav-button {
-        padding: 0.5rem .5rem;
+        padding: 0.5rem 1rem; /* Aumentar el padding para mejor accesibilidad */
         color: #333333;
         text-decoration: none;
         border: 1px solid #4444;
@@ -39,15 +46,33 @@
         display: flex;
         align-items: center;
         transition: all 0.2s;
+        justify-content: center; /* Centrar el contenido del botón */
     }
 
     .nav-button:hover {
-        opacity: 0.8;
-        color: #9146FF;
+        border: 1px solid #ffd700;
+        background: linear-gradient(45deg, #ffd700, #ff9900);
+		color: #fff;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     svg {
         width: 20px;
         height: 20px;
     }
-</style></nav>
+
+    @media (max-width: 768px) {
+        .buttons-container {
+            position: static; /* Cambiar a posición estática en móviles */
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .nav-button {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
