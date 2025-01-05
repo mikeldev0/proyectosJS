@@ -1,35 +1,42 @@
 ---
 ---
 <div class="container">
-	<h1>Proyectos <span>100%</span></h1>
+	<div class="content">
+		<h1>Proyectos <span>100%</span></h1>
+		<img src="/src/assets/js.svg" alt="Icono JS" class="icon-js" />
+	</div>
 </div>
 
 <style>
 	.container {
 		min-height: 100vh;
 		display: flex;
-		justify-content: flex-start;
+		justify-content: center;
 		align-items: center;
-		padding: 2rem;
-		padding-left: 35%;
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-        }
+		position: relative;
+		overflow: hidden;
+		z-index: 1;
+	}
 
-        .container::before {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: #ffd700;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.3;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
+	.content {
+		display: flex;
+		align-items: center;
+		gap: 2rem;
+	}
+
+	.container::before {
+		content: '';
+		position: absolute;
+		width: 300px;
+		height: 300px;
+		background: #ffd700;
+		border-radius: 50%;
+		filter: blur(100px);
+		opacity: 0.3;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: -1;
 	}
 
 	div {
@@ -39,8 +46,8 @@
 	}
 
 	h1 {
-		font-size: clamp(2rem, 5vw, 3.5rem);
-		text-align: left;
+		font-size: 6rem;
+		text-align: center;
 		margin: 0;
 		display: flex;
 		flex-direction: column;
@@ -48,28 +55,43 @@
 	}
 
 	span {
-		font-size: clamp(3rem, 8vw, 6rem);
+		font-size: 7rem;
 		position: relative;
 		font-weight: 900;
-        background-image: linear-gradient(45deg, #ffd700, #ff9900);
+		background-image: linear-gradient(45deg, #ffd700, #ff9900);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
 	}
 
-	span::after {
-		content: '';
-		width: clamp(100px, 20vw, 250px);
-		height: clamp(100px, 20vw, 250px);
-		rotate: 5deg;
-		border-radius: 15px;
-		background-image: url('/src/assets/js.svg');
-		background-size: contain;
-		background-repeat: no-repeat;
-		background-position: center;
-		position: absolute;
-		left: 100%;
-		top: 50%;
-		transform: translateY(-60%);
+	.icon-js {
+		width: 30vh;
+		height: 30vh;
+		border-radius: 10%;
+		rotate: 10deg;
+	}
+
+	@media (max-width: 768px) {
+		.content {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 2rem;
+			padding: 1rem;
+		}
+
+		.icon-js {
+			width: 30dvh;
+			height: 30dvh;
+		}
+
+		h1 {
+			font-size: 3rem;
+		}
+
+		span {
+			font-size: 5rem;
+		}
 	}
 </style>
