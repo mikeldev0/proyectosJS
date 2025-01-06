@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+    <main class="error-container">
+        <div class="content-wrapper">
+            <img src="/404.svg" alt="Ilustración 404" class="error-image"/>
+            <div class="error-message">
+                <h2>¡Ups! Página no encontrada</h2>
+                <p>La página que buscas no existe o ha sido movida.</p>
+            </div>
+        </div>
+        <div class="actions">
+            <a href="/" class="home-link">
+                <span>🏠</span> Volver al inicio
+            </a>
+            <a href="mailto:mikel@mikeldev.com" class="contact-link">
+                <span>📧</span> Contactar soporte
+            </a>
+        </div>
+    </main>
+</Layout>
+
+<style>
+    .error-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 2rem;
+        background-color: #f0f4f8; /* Fondo más suave */
+        flex-direction: column;
+    }
+
+    .content-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        max-width: 800px;
+        flex-direction: column; /* Columna por defecto */
+        justify-content: center;
+        text-align: center;
+    }
+
+    .error-image {
+        max-width: 250px;
+        height: auto;
+        animation: bounce 2s infinite;
+    }
+
+    .error-message h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .error-message p {
+        font-size: 1.2rem;
+        color: #666;
+    }
+
+    .actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .home-link, .contact-link {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        transition: background-color 0.3s, transform 0.2s;
+        font-weight: bold;
+    }
+
+    .home-link {
+        background-color: #3490dc;
+        color: white;
+    }
+
+    .contact-link {
+        background-color: #38c172;
+        color: white;
+    }
+
+    .home-link:hover, .contact-link:hover {
+        filter: brightness(0.9);
+        transform: translateY(-2px);
+    }
+
+    .home-link span, .contact-link span {
+        margin-right: 0.5rem;
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    @media (min-width: 768px) {
+        .content-wrapper {
+            flex-direction: row;
+            text-align: left;
+        }
+
+        .actions {
+            flex-direction: row;
+            justify-content: center;
+        }
+    }
+</style>

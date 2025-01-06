@@ -1,0 +1,210 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+    
+<Layout>
+    <main class="server-error-container">
+        <div class="error-content">
+            <div class="error-illustration">
+                <img src="/internal-server-error-500.svg" alt="Error del servidor" class="illustration-image"/>
+            </div>
+            <div class="error-details">
+                <h1>500</h1>
+                <h2>Error Interno del Servidor</h2>
+                <p>Estamos experimentando problemas técnicos. Nuestro equipo ya está trabajando para solucionarlo.</p>
+                <div class="error-actions">
+                    <a href="/" class="retry-button">🔄 Reintentar</a>
+                    <a href="mailto:soporte@mikeldev.com" class="support-button">📞 Contactar Soporte</a>
+                </div>
+                <p class="error-code">Código de error: SERVER_500</p>
+            </div>
+        </div>
+    </main>
+</Layout>
+    
+<style>
+    .server-error-container {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        padding: 1rem;
+        background: linear-gradient(135deg, #f0f0f0 0%, #ffffff 100%);
+        color: #000;
+    }
+
+    .error-content {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        width: min(95%, 1000px);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        border-radius: 20px;
+        padding: clamp(1rem, 5vw, 3rem);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .error-illustration {
+        justify-self: center;
+    }
+
+    .illustration-image {
+        width: min(100%, 480px);
+        height: auto;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .error-details {
+        text-align: center;
+    }
+
+    .error-details h1 {
+        font-size: clamp(3rem, 10vw, 6rem);
+        background: linear-gradient(45deg, #4a90e2, #50e3c2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+    }
+
+    .error-details h2 {
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+        color: #333;
+        margin: 0.5rem 0;
+    }
+
+    .error-details p {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        color: #555;
+        margin: 1rem 0;
+    }
+
+    .error-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        margin: 2rem 0;
+    }
+
+    .retry-button, .support-button {
+        padding: clamp(0.5rem, 2vw, 1rem) clamp(1rem, 3vw, 2rem);
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .retry-button {
+        background: linear-gradient(45deg, #4a90e2, #50e3c2);
+        color: white;
+    }
+
+    .support-button {
+        background: transparent;
+        border: 2px solid #4a90e2;
+        color: #4a90e2;
+    }
+
+    .retry-button:hover, .support-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+    }
+
+    .error-code {
+        font-size: 0.9rem;
+        color: #777;
+        margin-top: 2rem;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+    }
+
+    @media (min-width: 768px) {
+        .error-content {
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+        }
+
+        .error-details {
+            text-align: left;
+        }
+
+        .error-actions {
+            justify-content: flex-start;
+        }
+    }
+
+    @media (min-width: 481px) and (max-width: 767px) {
+        .error-content {
+            grid-template-columns: 1fr;
+            padding: 2rem;
+        }
+
+        .error-details {
+            text-align: center;
+        }
+
+        .error-actions {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .illustration-image {
+            width: 80%;
+            max-width: 400px;
+        }
+
+        .retry-button, .support-button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .error-details h1 {
+            font-size: 2.5rem;
+        }
+
+        .error-details h2 {
+            font-size: 1.5rem;
+        }
+
+        .error-details p {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .server-error-container {
+            padding: 0.5rem;
+        }
+
+        .error-content {
+            padding: 1rem;
+        }
+
+        .illustration-image {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .retry-button, .support-button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .error-details h1 {
+            font-size: 2rem;
+        }
+
+        .error-details h2 {
+            font-size: 1.2rem;
+        }
+
+        .error-details p {
+            font-size: 0.9rem;
+        }
+    }
+</style>
