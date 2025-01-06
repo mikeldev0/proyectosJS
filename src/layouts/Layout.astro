@@ -1,5 +1,5 @@
 ---
-const DEFAULT_URL = import.meta.env.URL;
+const DEFAULT_URL = Astro.url.href;
 interface Metadata {
 	property?: string;
 	name?: string;
@@ -18,12 +18,12 @@ const DEFAULT_METADATA: Metadata[] = [
 	{ name: "description", content: "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria. Descubre aplicaciones interactivas y ejemplos prácticos." },
 	{ name: "author", content: "Mikel Echeverria" },
 	{ name: "keywords", content: "JavaScript, proyectos web, desarrollo frontend, vanilla JS, Mikel Echeverria, desarrollo web, aplicaciones web, programación JavaScript" },
-	{ name: "robots", content: "index, follow, max-image-preview:large" },
+	{ name: "robots", content: "index, follow, max-image-preview:large"},
 	{ property: "og:title", content: "Proyectos JavaScript | Mikel Echeverria" },
 	{ property: "og:description", content: "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria" },
 	{ property: "og:type", content: "website" },
 	{ property: "og:url", content: DEFAULT_URL },
-	{ property: "og:image", content: `${DEFAULT_URL}/preview.webp` },
+	{ property: "og:image", content: `${DEFAULT_URL}preview.webp` },
 	{ property: "og:image:alt", content: "Proyectos JavaScript de Mikel Echeverria" },
 	{ property: "og:site_name", content: "Proyectos JavaScript" },
 	{ property: "og:locale", content: "es_ES" },
@@ -31,7 +31,7 @@ const DEFAULT_METADATA: Metadata[] = [
 	{ name: "twitter:creator", content: "@mikelecheve" },
 	{ name: "twitter:title", content: "Proyectos JavaScript | Mikel Echeverria" },
 	{ name: "twitter:description", content: "Colección de proyectos web desarrollados con JavaScript vanilla" },
-	{ name: "twitter:image", content: `${DEFAULT_URL}/preview.jpg` },
+	{ name: "twitter:image", content: `${DEFAULT_URL}preview.webp` },
 	{ name: "twitter:image:alt", content: "Proyectos JavaScript de Mikel Echeverria" }
 ];
 
@@ -45,12 +45,7 @@ const DEFAULT_JSON_LD = {
 		"name": "Mikel Echeverria"
 	},
 	"description": "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria",
-	"image": `${DEFAULT_URL}/preview.jpg`,
-	"potentialAction": {
-		"@type": "SearchAction",
-		"target": `${DEFAULT_URL}/search?query={search_term}`,
-		"query-input": "required name=search_term"
-	}
+	"image": `${DEFAULT_URL}preview.webp`,
 };
 
 const {
@@ -66,7 +61,7 @@ const {
 		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="/js.svg" />
 		<title>{title}</title>
-		<link rel="canonical" href="{url}" />
+		<link rel="canonical" href=`${url}` />
 		{metadata.map(meta => (
 			<meta {...meta} />
 		))}
