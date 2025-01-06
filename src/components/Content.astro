@@ -1,0 +1,84 @@
+---
+---
+<div class="content">
+	<h1>Proyectos <span>100%</span></h1>
+	<img src="/js.svg" alt="Icono JS" class="icon-js" />
+</div>
+
+<style>
+	.content {
+		display: flex;
+		align-items: center;
+		gap: 3rem;
+		margin-bottom: 2rem;
+		flex-direction: row; /* Asegurar disposición en fila para PC */
+		justify-content: center; /* Centrar contenido horizontalmente */
+		align-items: center; /* Centrar contenido verticalmente */
+	}
+
+	.container::before {
+		content: '';
+		position: absolute;
+		width: 400px;
+		height: 400px;
+		background: #ffd700;
+		border-radius: 50%;
+		filter: blur(120px);
+		opacity: 0.2;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: -1;
+	}
+
+	h1 {
+		font-size: 6rem;
+		text-align: center;
+		margin: 0;
+		font-weight: 800;
+		color: #1a1a1a;
+	}
+
+	span {
+		font-size: 7rem;
+		position: relative;
+		font-weight: 900;
+		background: linear-gradient(45deg, #ffd700, #ff9900);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.icon-js {
+		width: 25vh;
+		height: 25vh;
+		border-radius: 10%;
+		transform: rotate(10deg);
+		filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+	}
+	@media (min-width: 559px) and (max-width: 767px) {
+		span {
+			font-size: 6rem;
+		}
+	}
+
+	@media (max-width: 768px) {
+		.content {
+			flex-direction: column; /* Asegurar disposición en columna para móvil */
+			gap: 1rem;
+		}
+
+		h1 {
+			font-size: 3rem;
+		}
+
+		span {
+			font-size: 6rem;
+		}
+
+		.icon-js {
+			width: 50vw;
+			height: 50vw;
+		}
+	}
+</style>

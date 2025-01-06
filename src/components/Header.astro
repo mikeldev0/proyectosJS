@@ -3,13 +3,106 @@ import { FaUser } from 'react-icons/fa';
 ---
 <header>
     <nav class="buttons-container">
-        <a href="https://www.mikeldev.com" target="_blank" rel="noopener" class="nav-button portfolio" title="Mi Portfolio" aria-label="mikeldev.com">
-            <span class="icon"><FaUser /></span>
-        </a>
+        <div class="left-container">
+            <div class="image-container">
+            <div class="skeleton"></div>
+            <img
+                src="https://github.com/byronnDev.png"
+                class="profile-image"
+                alt="..yo"
+                loading="lazy"
+                onload="this.previousElementSibling.style.display='none'; this.classList.add('loaded');"
+            />
+            </div>
+        </div>
+        <div class="right-container">
+            <a href="https://www.mikeldev.com" target="_blank" rel="noopener" class="nav-button portfolio" title="Mi Portfolio" aria-label="mikeldev.com">
+                <span class="icon"><FaUser /></span>
+            </a>
+        </div>
     </nav>
 </header>
 
 <style>
+    .left-container {
+        position: static;
+        display: flex;
+        align-items: center;
+    }
+
+    .right-container {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .profile-image {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .profile-image:hover {
+        transform: rotate(360deg) scale(1.2);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    }
+
+    .profile-image.loaded:hover {
+        transform: rotate(360deg) scale(1.2);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+    }
+
+    .image-container {
+        position: relative;
+    }
+
+    .skeleton {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(225deg, #ccc 25%, #e0e0e0 50%, #ccc 75%);
+        background-size: 200% 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+        0% {
+            background-position: -200% 0;
+        }
+        100% {
+            background-position: 200% 0;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .left-container {
+            position: static;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-image {
+            width: 35px;
+            height: 35px;
+            margin-top: 0.5rem; /* Alinear con el botón de navegación */
+        }
+
+        .image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .skeleton {
+            margin-top: 0.5rem;
+            z-index: 1;
+            width: 35px;
+            height: 35px;
+        }
+    }
     header {
         position: absolute;
         top: 0;
@@ -18,10 +111,10 @@ import { FaUser } from 'react-icons/fa';
         z-index: 1000;
     }
     .buttons-container {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
         gap: 1rem;
         flex-wrap: wrap; /* Permitir que los botones se envuelvan en pantallas pequeñas */
     }
@@ -90,15 +183,13 @@ import { FaUser } from 'react-icons/fa';
 
     @media (max-width: 768px) {
         .buttons-container {
-            position: static; /* Cambiar a posición estática en móviles */
+            position: static;
             justify-content: center;
-            gap: 0.5rem;
-            margin-top: 1rem;
         }
 
         .nav-button {
-            padding: 0.5rem;
             font-size: 0.9rem;
+            margin: 0;
         }
     }
 </style>

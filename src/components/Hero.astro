@@ -1,0 +1,28 @@
+---
+import Content from './Content.astro';
+import Presentation from './Presentation.astro';
+---
+<div class="container">
+	<Content />
+	<Presentation />
+</div>
+
+<style>
+	.container {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		position: relative;
+		overflow: hidden;
+		z-index: 1;
+		padding: 2rem;
+	}
+
+	@media (max-width: 768px) {
+		.container {
+			margin-top: 2rem;
+		}
+	}
+</style>

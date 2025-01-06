@@ -1,0 +1,62 @@
+
+---
+import { FaGithub, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
+---
+<div class="social-buttons">
+	<a href="https://github.com/byronnDev" class="button" target="_blank">
+		<FaGithub />
+		GitHub
+	</a>
+	<a href="https://www.linkedin.com/in/mikel-echeverria" class="button" target="_blank">
+		<FaLinkedin />
+		LinkedIn
+	</a>
+	<a href="https://x.com/MikelEcheve" class="button" target="_blank">
+		<FaXTwitter />
+		Twitter
+	</a>
+</div>
+
+<style>
+    .social-buttons {
+		margin-top: 2rem;
+		display: flex;
+		gap: 1.5rem;
+		justify-content: center;
+	}
+
+	.button {
+		padding: 0.8rem 2rem;
+		color: #333;
+		text-decoration: none;
+		border-radius: 0.5rem;
+		border: 2px solid #ffd700;
+		font-weight: 500;
+		transition: all 0.3s ease;
+	}
+
+	.button:hover {
+		background: linear-gradient(45deg, #ffd700, #ff9900);
+		color: #fff;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.button svg {
+		width: 20px;
+		height: 20px;
+		margin-right: 8px;
+		vertical-align: middle;
+	}
+
+    @media (max-width: 768px) {
+		.social-buttons {
+			flex-wrap: Wrap;
+		}
+
+		.button {
+			width: 100%;
+			text-align: center;
+		}
+    }
+</style>

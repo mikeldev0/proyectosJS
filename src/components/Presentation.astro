@@ -1,0 +1,38 @@
+---
+import SocialButtons from './SocialButtons.astro';
+---
+<section class="presentation-container">
+	<p class="description">
+		Como desarrollador apasionado por la innovación tecnológica, he creado esta plataforma para documentar mi viaje de aprendizaje y crecimiento en JavaScript. A través de proyectos dinámicos e interactivos, exploro las últimas tecnologías y frameworks del ecosistema web moderno, comprometiéndome con la excelencia y el aprendizaje continuo para crear soluciones digitales impactantes.
+	</p>
+	<SocialButtons />
+</section>
+
+<style>
+    .presentation-container {
+		max-width: 800px;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.description {
+		font-size: 1rem;
+		line-height: 1.8;
+		color: #333;
+		text-align: justify;
+		padding: 2rem;
+		background: rgba(255, 255, 255, 0.1);
+		backdrop-filter: blur(15px);
+		-webkit-backdrop-filter: blur(15px);
+		border-radius: 1rem;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	}
+
+    @media (max-width: 768px) {
+		.description {
+			font-size: 0.9rem;
+			padding: 1.5rem;
+		}
+    }
+</style>
