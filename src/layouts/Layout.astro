@@ -1,21 +1,77 @@
 ---
+const DEFAULT_URL = import.meta.env.URL;
+interface Metadata {
+	property?: string;
+	name?: string;
+	content: string;
+}
+
+interface Props {
+	metadata?: Metadata[];
+	title?: string;
+	url?: string;
+}
+
+const DEFAULT_METADATA: Metadata[] = [
+	{ name: "viewport", content: "width=device-width, initial-scale=1" },
+	{ name: "generator", content: Astro.generator },
+	{ name: "description", content: "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria. Descubre aplicaciones interactivas y ejemplos prácticos." },
+	{ name: "author", content: "Mikel Echeverria" },
+	{ name: "keywords", content: "JavaScript, proyectos web, desarrollo frontend, vanilla JS, Mikel Echeverria, desarrollo web, aplicaciones web, programación JavaScript" },
+	{ name: "robots", content: "index, follow, max-image-preview:large" },
+	{ property: "og:title", content: "Proyectos JavaScript | Mikel Echeverria" },
+	{ property: "og:description", content: "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria" },
+	{ property: "og:type", content: "website" },
+	{ property: "og:url", content: DEFAULT_URL },
+	{ property: "og:image", content: `${DEFAULT_URL}/preview.webp` },
+	{ property: "og:image:alt", content: "Proyectos JavaScript de Mikel Echeverria" },
+	{ property: "og:site_name", content: "Proyectos JavaScript" },
+	{ property: "og:locale", content: "es_ES" },
+	{ name: "twitter:card", content: "summary_large_image" },
+	{ name: "twitter:creator", content: "@mikelecheve" },
+	{ name: "twitter:title", content: "Proyectos JavaScript | Mikel Echeverria" },
+	{ name: "twitter:description", content: "Colección de proyectos web desarrollados con JavaScript vanilla" },
+	{ name: "twitter:image", content: `${DEFAULT_URL}/preview.jpg` },
+	{ name: "twitter:image:alt", content: "Proyectos JavaScript de Mikel Echeverria" }
+];
+
+const DEFAULT_JSON_LD = {
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	"name": "Proyectos JavaScript",
+	"url": DEFAULT_URL,
+	"author": {
+		"@type": "Person",
+		"name": "Mikel Echeverria"
+	},
+	"description": "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria",
+	"image": `${DEFAULT_URL}/preview.jpg`,
+	"potentialAction": {
+		"@type": "SearchAction",
+		"target": `${DEFAULT_URL}/search?query={search_term}`,
+		"query-input": "required name=search_term"
+	}
+};
+
+const {
+	metadata = DEFAULT_METADATA,
+	title = "Proyectos 100% JavaScript | Mikel Echeverria",
+	url = DEFAULT_URL,
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="es">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/js.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Proyectos 100% JavaScript | Mikel Echeverria</title>
-		<meta name="description" content="Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria. Descubre aplicaciones interactivas y ejemplos prácticos." />
-		<meta name="author" content="Mikel Echeverria" />
-		<meta name="keywords" content="JavaScript, proyectos web, desarrollo frontend, vanilla JS, Mikel Echeverria" />
-		<meta property="og:title" content="Proyectos JavaScript | Mikel Echeverria" />
-		<meta property="og:description" content="Colección de proyectos web desarrollados con JavaScript vanilla" />
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://mikeldev.com" />
+		<title>{title}</title>
+		<link rel="canonical" href="{url}" />
+		{metadata.map(meta => (
+			<meta {...meta} />
+		))}
+		<script type="application/ld+json" set:html={JSON.stringify(DEFAULT_JSON_LD)}>
+		</script>
 	</head>
 	<body>
 		<slot />
