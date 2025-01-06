@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const soporte = "soporte@mikeldev.com"
 ---
     
 <Layout>
@@ -14,7 +16,7 @@ import Layout from '../layouts/Layout.astro';
                 <p>Estamos experimentando problemas técnicos. Nuestro equipo ya está trabajando para solucionarlo.</p>
                 <div class="error-actions">
                     <a href="/" class="retry-button">🔄 Reintentar</a>
-                    <a href="mailto:soporte@mikeldev.com" class="support-button">📞 Contactar Soporte</a>
+                    <a href={`mailto:${soporte}`} class="support-button">📞 Contactar Soporte</a>
                 </div>
                 <p class="error-code">Código de error: SERVER_500</p>
             </div>

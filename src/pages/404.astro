@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const soporte = "soporte@mikeldev.com"
 ---
 
 <Layout>
@@ -15,7 +17,7 @@ import Layout from '../layouts/Layout.astro';
             <a href="/" class="home-link">
                 <span>🏠</span> Volver al inicio
             </a>
-            <a href="mailto:mikel@mikeldev.com" class="contact-link">
+            <a href={`mailto:${soporte}`} class="contact-link"></a>
                 <span>📧</span> Contactar soporte
             </a>
         </div>
