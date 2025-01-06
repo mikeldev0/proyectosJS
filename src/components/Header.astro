@@ -1,8 +1,11 @@
 ---
+import { FaUser } from 'react-icons/fa';
 ---
 <header>
     <nav class="buttons-container">
-        <a href="https://www.mikeldev.com" target="_blank" rel="noopener" class="nav-button portfolio" title="Mi Portfolio" aria-label="mikeldev.com"/>
+        <a href="https://www.mikeldev.com" target="_blank" rel="noopener" class="nav-button portfolio" title="Mi Portfolio" aria-label="mikeldev.com">
+            <span class="icon"><FaUser /></span>
+        </a>
     </nav>
 </header>
 
@@ -47,22 +50,27 @@
         position: relative;
         min-width: 6rem;
         min-height: 1rem;
+        overflow: hidden;
+    }
+
+    .portfolio .icon {
+        margin-right: 6rem;
     }
 
     .portfolio::before {
         content: "Mi Portfolio";
         position: absolute;
-        left: 50%;
+        left: 60%;
         top: 50%;
         transform: translate(-50%, -50%);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         white-space: nowrap;
     }
-
+    
     .portfolio::after {
         content: "mikeldev.com";
         position: absolute;
-        left: 50%;
+        left: 60%;
         top: 50%;
         transform: translate(-50%, 100%);
         opacity: 0;
