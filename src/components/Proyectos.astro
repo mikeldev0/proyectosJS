@@ -1,0 +1,96 @@
+---
+import Card from './Card.astro';
+
+interface Proyectos {
+    img: string;
+    title: string;
+    description: string;
+    demo?: string;
+    source?: string;
+}
+
+const proyectos: Proyectos[] = [
+    {
+        img: 'https://github.com/byronnDev/WebLLM-local/blob/main/media/screenshot.png?raw=true',
+        title: 'Chatbot LLM con WebGPU',
+        description: 'Chatbot desarrollado con WebGPU en el que puedes interactuar con un asistente virtual ejecutado 100% en tu equipo local.',
+        demo: 'https://chat.mikeldev.com',
+        source: 'https://github.com/byronnDev/WebLLM-local'
+    },
+]
+---
+
+<section id="proyectos" aria-label="Sección de proyectos">
+    <div class="header-section">
+        <h2>Proyectos</h2>
+        <p>Descubre una colección de proyectos web desarrollados con JavaScript vanilla. Desde aplicaciones interactivas hasta ejemplos prácticos que demuestran las capacidades del desarrollo web moderno.</p>
+        <meta name="description" content="Proyectos web desarrollados con JavaScript vanilla, incluyendo aplicaciones interactivas y ejemplos prácticos">
+    </div>
+
+    <div class="proyectos">
+    {proyectos.map((proyecto) => (
+        <Card proyecto={proyecto} />
+    ))}
+    </div>
+</section>
+
+<style>
+    .header-section {
+        text-align: center;
+        padding: 4rem clamp(1rem, 5vw, 4rem);
+        background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    }
+
+    h2 {
+        font-size: clamp(3rem, 6vw, 4rem);
+        font-weight: 900;
+        background: linear-gradient(90deg, #000000, #666666);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.5rem;
+    }
+
+    h2::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: #333;
+        margin: 1rem auto;
+        border-radius: 2px;
+    }
+
+    p {
+        font-size: clamp(1rem, 2vw, 1.25rem);
+        line-height: 1.8;
+        color: #4b5563;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .proyectos {
+        padding: 4rem clamp(1rem, 5vw, 4rem);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    #proyectos {
+        background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    }
+
+    @media (max-width: 768px) {
+        .proyectos {
+            padding: 3rem 1rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+        }
+
+        p {
+            text-wrap: pretty;
+            font-size: 1.1rem;
+        }
+    }
+</style>
