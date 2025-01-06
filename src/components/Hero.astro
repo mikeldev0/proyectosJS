@@ -1,15 +1,19 @@
 ---
+import BotonBajar from './BotonBajar.astro';
 import Content from './Content.astro';
 import Presentation from './Presentation.astro';
+import SocialButtons from './SocialButtons.astro';
 ---
 <div class="container">
 	<Content />
 	<Presentation />
+	<SocialButtons />
+	<BotonBajar />
 </div>
 
 <style>
 	.container {
-		min-height: 100vh;
+		min-height: 90vh;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
