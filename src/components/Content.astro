@@ -55,10 +55,20 @@
 		border-radius: 10%;
 		transform: rotate(10deg);
 		filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+		transition: transform 0.3s;
 	}
+
+	.icon-js:hover {
+		transform: rotate(0) scale(1.2);
+	}
+
 	@media (min-width: 559px) and (max-width: 767px) {
 		span {
 			font-size: 6rem;
+		}
+
+		.icon-js:hover {
+			transform: rotate(0) scale(1.1);
 		}
 	}
 
