@@ -17,6 +17,12 @@ const proyectos: Proyectos[] = [
         demo: 'https://chat.mikeldev.com',
         source: 'https://github.com/byronnDev/WebLLM-local'
     },
+    {
+        img: 'https://github.com/byronnDev/markdownAnything/raw/refs/heads/main/assets/images/preview.webp ',
+        title: 'MarkdownAnything',
+        description: 'Convierte cualquier documento a Markdown con un simple drag and drop. Ideal para crear contenido web de forma rápida.',
+        source: 'https://github.com/byronnDev/markdownAnything'
+    },
 ]
 ---
 
@@ -69,10 +75,10 @@ const proyectos: Proyectos[] = [
     .proyectos {
         padding: 4rem clamp(1rem, 5vw, 4rem);
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(300px, 350px));
         gap: 2rem;
+        justify-content: center;
     }
-
     #proyectos {
         background: linear-gradient(145deg, #ffffff, #f0f0f0);
     }
