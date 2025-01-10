@@ -10,7 +10,7 @@
 
 </div>
 
-![Project Preview](./assets/images/preview.webp)
+![Project Preview](./assets/preview.webp)
 
 ## ✨ Features
 
