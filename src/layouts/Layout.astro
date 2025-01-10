@@ -3,7 +3,11 @@ const DEFAULT_URL = Astro.url.href;
 interface Metadata {
 	property?: string;
 	name?: string;
-	content: string;
+	content?: string;
+	link?: string;
+	type?: string;
+	title?: string;
+	href?: string;
 }
 
 interface Props {
@@ -15,24 +19,33 @@ interface Props {
 const DEFAULT_METADATA: Metadata[] = [
 	{ name: "viewport", content: "width=device-width, initial-scale=1" },
 	{ name: "generator", content: Astro.generator },
-	{ name: "description", content: "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria. Descubre aplicaciones interactivas y ejemplos prácticos." },
+	{ name: "description", content: "Explora una colección completa de proyectos web interactivos desarrollados con JavaScript vanilla. Incluye ejemplos prácticos, juegos, aplicaciones y ejercicios de programación frontend." },
 	{ name: "author", content: "Mikel Echeverria" },
 	{ name: "keywords", content: "JavaScript, proyectos web, desarrollo frontend, vanilla JS, Mikel Echeverria, desarrollo web, aplicaciones web, programación JavaScript" },
 	{ name: "robots", content: "index, follow, max-image-preview:large"},
 	{ property: "og:title", content: "Proyectos JavaScript | Mikel Echeverria" },
-	{ property: "og:description", content: "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria" },
+	{ property: "og:description", content: "Explora una colección completa de proyectos web interactivos desarrollados con JavaScript vanilla. Incluye ejemplos prácticos, juegos y aplicaciones." },
 	{ property: "og:type", content: "website" },
 	{ property: "og:url", content: DEFAULT_URL },
 	{ property: "og:image", content: `${DEFAULT_URL}/preview.webp` },
 	{ property: "og:image:alt", content: "Proyectos JavaScript de Mikel Echeverria" },
 	{ property: "og:site_name", content: "Proyectos JavaScript" },
 	{ property: "og:locale", content: "es_ES" },
+	{ property: "og:image:width", content: "1200" },
+	{ property: "og:image:height", content: "630" },
+	{ property: "og:image:type", content: "image/webp" },
 	{ name: "twitter:card", content: "summary_large_image" },
 	{ name: "twitter:creator", content: "@mikelecheve" },
 	{ name: "twitter:title", content: "Proyectos JavaScript | Mikel Echeverria" },
-	{ name: "twitter:description", content: "Colección de proyectos web desarrollados con JavaScript vanilla" },
+	{ name: "twitter:description", content: "Explora una colección completa de proyectos web interactivos desarrollados con JavaScript vanilla. Incluye ejemplos prácticos y aplicaciones." },
 	{ name: "twitter:image", content: `${DEFAULT_URL}/preview.webp` },
-	{ name: "twitter:image:alt", content: "Proyectos JavaScript de Mikel Echeverria" }
+	{ name: "twitter:image:alt", content: "Proyectos JavaScript de Mikel Echeverria" },
+	{ name: "keywords", content: "JavaScript vanilla, proyectos web, desarrollo frontend, ejemplos JavaScript, tutoriales JavaScript, aplicaciones web interactivas, ejercicios JavaScript, portfolio desarrollo web, Mikel Echeverria desarrollador" },
+	{ name: "theme-color", content: "#f7df1e" },
+	{ name: "format-detection", content: "telephone=no" },
+	{ name: "apple-mobile-web-app-capable", content: "yes" },
+	{ name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+	{ link: "alternate", type: "application/rss+xml", title: "RSS Feed", href: "/rss.xml" },
 ];
 
 const DEFAULT_JSON_LD = {
@@ -42,10 +55,22 @@ const DEFAULT_JSON_LD = {
 	"url": DEFAULT_URL,
 	"author": {
 		"@type": "Person",
-		"name": "Mikel Echeverria"
+		"name": "Mikel Echeverria",
+		"url": "https://github.com/byronndev",
+		"sameAs": [
+			"https://x.com/mikelecheve",
+			"https://github.com/byronndev",
+			"https://www.linkedin.com/in/mikel-echeverria/"
+		]
 	},
-	"description": "Colección de proyectos web desarrollados con JavaScript vanilla por Mikel Echeverria",
+	"description": "Explora una colección completa de proyectos web interactivos desarrollados con JavaScript vanilla. Incluye ejemplos prácticos, juegos, aplicaciones y ejercicios de programación frontend.",
 	"image": `${DEFAULT_URL}/preview.webp`,
+	"inLanguage": "es",
+	"potentialAction": {
+		"@type": "SearchAction",
+		"target": `${DEFAULT_URL}/search?q={search_term_string}`,
+		"query-input": "required name=search_term_string"
+	}
 };
 
 const {
@@ -60,10 +85,12 @@ const {
 	<head>
 		<meta charset="UTF-8" />
 		<link rel="icon" type="image/svg+xml" href="/js.svg" />
+		<link rel="apple-touch-icon" href="/icon-192x192.png" />
+		<link rel="manifest" href="/manifest.json" />
 		<title>{title}</title>
-		<link rel="canonical" href=`${url}` />
+		<link rel="canonical" href={url} />
 		{metadata.map(meta => (
-			<meta {...meta} />
+			meta.link ? <link {...meta} /> : <meta {...meta} />
 		))}
 		<script type="application/ld+json" set:html={JSON.stringify(DEFAULT_JSON_LD)}>
 		</script>

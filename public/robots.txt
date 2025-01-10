@@ -1,0 +1,4 @@
+
+User-agent: *
+Allow: /
+Sitemap: https://proyectosjs.mikeldev.com/sitemap.xml
