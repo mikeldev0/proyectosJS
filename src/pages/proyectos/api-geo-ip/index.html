@@ -138,6 +138,7 @@
             opacity: 0;
             transform: translateY(20px);
             transition: var(--transition);
+            margin-bottom: 2rem;
         }
 
         .ipInfo.show {
@@ -360,6 +361,21 @@
                 gap: 0.5rem;
             }
         }
+
+        /* Estilos para el enlace "View on Maps" */
+        .maps-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color var(--transition);
+        }
+
+        .maps-link:hover {
+            color: var(--success);
+        }
     </style>
 
     <div class="center">
@@ -398,6 +414,7 @@
                 </span>
             </p>
         </div>
+        <a href="#" id="mapsLink" class="maps-link" target="_blank">View on Maps</a>
     </div>
 </body>
 
@@ -408,16 +425,15 @@
         searchContainer: document.querySelector('.center'),
         ipInfo: document.querySelector('.ipInfo'),
         ipInput: document.querySelector('#ip'),
-        infoValues: document.querySelectorAll('.info-value')
+        infoValues: document.querySelectorAll('.info-value'),
+        mapsLink: document.querySelector('#mapsLink') // Añadido
     };
 
-    // Configuration
+    // Configuration 
     const skeletonClasses = {
         ipInfo: 'ip',
         country: 'country',
         region: 'region',
-        city: 'city',
-        isp: 'isp',
         latitude: 'small',
         longitude: 'small'
     };
@@ -467,19 +483,37 @@
     }
 
     function updateUIWithData(data) {
-        const dataMapping = {
-            '#ipInfo': 'ip',
-            '#country': 'country_name',
-            '#region': 'region',
-            '#city': 'city',
-            '#isp': 'org',
-            '#latitude': 'latitude',
-            '#longitude': 'longitude'
-        };
+        // Basic info
+        document.querySelector('#ipInfo').textContent = data.ip;
+        document.querySelector('#country').textContent = `${data.country_name} (${data.country_code})`;
+        document.querySelector('#region').textContent = `${data.region}, ${data.city}`;
+        
+        // Coordinates with precision
+        document.querySelector('#latitude').textContent = data.latitude.toFixed(4);
+        document.querySelector('#longitude').textContent = data.longitude.toFixed(4);
 
-        Object.entries(dataMapping).forEach(([selector, property]) => {
-            document.querySelector(selector).textContent = data[property];
-        });
+        // Actualizar el enlace de Google Maps
+        elements.mapsLink.href = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+
+        // Add more info if available
+        if (data.org) {
+            addInfoField('Organization', data.org);
+        }
+        if (data.asn) {
+            addInfoField('ASN', data.asn);
+        }
+        if (data.timezone) {
+            addInfoField('Timezone', data.timezone);
+        }
+    }
+
+    function addInfoField(label, value) {
+        const p = document.createElement('p');
+        p.innerHTML = `
+            <span class="info-label">${label}</span>
+            <span class="info-value">${value}</span>
+        `;
+        document.querySelector('.info-grid').appendChild(p);
     }
 
     // Event Handlers
@@ -488,6 +522,11 @@
         toggleLoadingState(true);
         try {
             const data = await fetchIpData(elements.ipInput.value);
+            // Clear previous additional fields
+            const infoGrid = document.querySelector('.info-grid');
+            while (infoGrid.children.length > 4) {
+                infoGrid.removeChild(infoGrid.lastChild);
+            }
             updateUIWithData(data);
         } finally {
             toggleLoadingState(false);
