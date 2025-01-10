@@ -1,48 +1,104 @@
-# Astro Starter Kit: Basics
+<div align="center">
+<img src="public/logo.svg" alt="ProyectosJS" style="width: min(200px, 100%)"/>
+</div>
 
-```sh
-npm create astro@latest -- --template basics
+<div align="center">
+
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Astro](https://img.shields.io/badge/Astro-BC52EE?style=for-the-badge&logo=astro&logoColor=white)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+</div>
+
+## 📖 Descripción
+
+ProyectosJS es una colección de proyectos web interactivos desarrollados con JavaScript vanilla y frameworks modernos. La plataforma sirve como portafolio y recurso de aprendizaje, presentando ejemplos prácticos y aplicaciones funcionales.
+
+## 🌟 Características Principales
+
+- ⚡ **Alto Rendimiento**: Construido con Astro para una carga optimizada
+- 📱 **Diseño Responsivo**: Experiencia fluida en todos los dispositivos
+- 🎨 **UI Moderna**: Interfaz limpia y atractiva con Tailwind CSS
+- 🔍 **SEO Optimizado**: Estructura y metadata mejorada para buscadores
+
+## 🛠️ Tecnologías
+
+- **Frontend**: 
+  - Astro (Framework principal)
+  - React (Componentes interactivos)
+  - Tailwind CSS (Estilos)
+  - JavaScript Vanilla
+
+- **Desarrollo**:
+  - Vite
+  - TypeScript
+  - Node.js
+
+## 📦 Instalación
+
+1. **Clonar el repositorio**
+```bash
+git clone https://github.com/byronndev/proyectosjs.git
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+2. **Instalar dependencias**
+```bash
+# Navegar al directorio
+cd proyectosjs
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+# Instalar con npm
+npm install
+```
 
-![just-the-basics](https://github.com/withastro/astro/assets/2244813/a0a5533c-a856-4198-8470-2d67b1d7c554)
+3. **Iniciar entorno de desarrollo**
+```bash
+npm run dev
+```
 
-## 🚀 Project Structure
+## 🚀 Despliegue
 
-Inside of your Astro project, you'll see the following folders and files:
+```bash
+# Construir para producción
+npm run build
 
-```text
+# Previsualizar la build
+npm run preview
+```
+
+## 📂 Estructura del Proyecto
+
+```
 /
-├── public/
-│   └── favicon.svg
 ├── src/
+│   ├── components/
 │   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
+│   ├── pages/
+│   └── styles/
+├── public/
 └── package.json
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🤝 Contribuir
 
-## 🧞 Commands
+1. Fork del repositorio
+2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit de tus cambios (`git commit -m 'Add: AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abrir un Pull Request
 
-All commands are run from the root of the project, from a terminal:
+## 📄 Licencia
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Este proyecto está bajo la Licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
 
-## 👀 Want to learn more?
+## 📞 Contacto
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Mikel Echeverria - [@MikelEcheve](https://x.com/MikelEcheve) - mikel@mikeldev.com
+
+🔗 [mikeldev.com](https://www.mikeldev.com)
+
+---
+
+<div align="center">
+
+⭐ Si te ha gustado el proyecto, ¡no olvides darle una estrella! ⭐
+
+</div>
