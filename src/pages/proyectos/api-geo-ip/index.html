@@ -16,10 +16,11 @@
             --bg-secondary: rgba(52, 152, 219, 0.1);
             --border: rgba(52, 152, 219, 0.3);
             --transition: all 0.3s ease;
-            --container-width: clamp(250px, 80vw, 400px);
+            --container-width: min(90vw, 500px);
             --spacing-sm: clamp(0.5rem, 1vw, 1rem);
             --spacing-md: clamp(1rem, 2vw, 1.5rem);
             --spacing-lg: clamp(1.5rem, 5vw, 3rem);
+            --card-padding: clamp(1rem, 3vw, 1.5rem);
         }
 
         /* Reset y estilos base */
@@ -126,7 +127,7 @@
         .ipInfo {
             width: var(--container-width);
             margin: 1rem auto;
-            padding: 1.5rem;
+            padding: var(--card-padding);
             background-color: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -151,19 +152,21 @@
         .info-grid p {
             display: flex;
             align-items: center;
-            padding: 0.8rem 1rem;
+            padding: var(--card-padding);
             background: rgba(52, 152, 219, 0.05);
             border-radius: 8px;
             transition: var(--transition);
             justify-content: space-between;
             min-height: 3rem;
+            gap: 1rem;
         }
 
         .info-label {
             font-style: normal;
             color: var(--text-secondary);
             font-weight: 500;
-            width: 120px;
+            width: 35%;
+            min-width: 100px;
             font-size: 0.9rem;
         }
 
@@ -171,23 +174,45 @@
             color: var(--text);
             font-weight: 600;
             font-size: 0.95rem;
-            width: 150px;
+            width: 65%;
+            min-width: 120px;
             text-align: right;
         }
 
         .coordinate-group {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
             color: var(--text);
-            width: 150px;
+            width: 65%;
             justify-content: flex-end;
+            align-items: center;
+        }
+
+        .coordinate {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .coordinate .info-value {
+            width: auto;
+            min-width: auto;
+            margin-right: 0.25rem;
+        }
+
+        .coordinate .unit {
+            color: var(--text-secondary);
+            font-size: clamp(0.75rem, 1vw, 0.9rem);
         }
 
         /* Loading States */
         .skeleton {
-            background: linear-gradient(90deg, 
-                rgba(52, 152, 219, 0.05) 25%, 
-                rgba(52, 152, 219, 0.15) 50%, 
+            background: linear-gradient(90deg,
+                rgba(52, 152, 219, 0.05) 25%,
+                rgba(52, 152, 219, 0.15) 50%,
                 rgba(52, 152, 219, 0.05) 75%);
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
@@ -233,6 +258,105 @@
                 justify-content: flex-start;
             }
         }
+
+        @media (max-width: 768px) {
+            :root {
+                --container-width: 95vw;
+            }
+
+            .center {
+                padding: var(--spacing-md);
+            }
+
+            .goUp {
+                padding: var(--spacing-sm);
+            }
+
+            h1 {
+                font-size: clamp(1.2rem, 4vw, 2rem);
+            }
+
+            .info-grid p {
+                padding: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .info-grid p {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                padding: 0.8rem;
+            }
+
+            .info-label,
+            .info-value, 
+            .coordinate-group {
+                width: 100%;
+                text-align: left;
+            }
+
+            .coordinate-group {
+                justify-content: flex-start;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+                margin-bottom: 1rem;
+            }
+
+            .btn {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+
+            input#ip {
+                font-size: 0.9rem;
+                padding: 8px 12px;
+            }
+
+            label {
+                font-size: 0.75rem;
+            }
+
+            .coordinate-group {
+                width: 100%;
+                justify-content: flex-start;
+                gap: 0.5rem;
+            }
+
+            .coordinate {
+                padding: 0.25rem 0.5rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .info-grid p {
+                padding: 0.6rem;
+            }
+
+            .info-label {
+                font-size: 0.8rem;
+            }
+
+            .info-value {
+                font-size: 0.85rem;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+            .center {
+                padding: var(--spacing-md);
+            }
+
+            .info-grid {
+                gap: 0.5rem;
+            }
+        }
     </style>
 
     <div class="center">
@@ -242,7 +366,6 @@
         <button class="btn">Search IP info</button>
     </div>
 
-    <!-- Actualizar la estructura HTML de la tarjeta de información -->
     <div class="ipInfo hidden">
         <h2>IP Information</h2>
         <div class="info-grid">
@@ -259,18 +382,16 @@
                 <span id="region" class="info-value skeleton"></span>
             </p>
             <p>
-                <span class="info-label">City</span>
-                <span id="city" class="info-value skeleton"></span>
-            </p>
-            <p>
-                <span class="info-label">ISP</span>
-                <span id="isp" class="info-value skeleton"></span>
-            </p>
-            <p>
                 <span class="info-label">Coordinates</span>
                 <span class="coordinate-group">
-                    <span id="latitude" class="info-value skeleton"></span>°N,
-                    <span id="longitude" class="info-value skeleton"></span>°E
+                    <span class="coordinate">
+                        <span id="latitude" class="info-value skeleton"></span>
+                        <span class="unit">°N</span>
+                    </span>
+                    <span class="coordinate">
+                        <span id="longitude" class="info-value skeleton"></span>
+                        <span class="unit">°E</span>
+                    </span>
                 </span>
             </p>
         </div>
