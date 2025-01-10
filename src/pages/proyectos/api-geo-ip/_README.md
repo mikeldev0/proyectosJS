@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./_assets/geo_ip.svg" alt="Geo IP Logo" width="300" height="auto" style="max-width: 100%; height: auto;">
+<img src="/public/geo_ip.svg" alt="Geo IP Logo" width="300" height="auto" style="max-width: 100%; height: auto;">
 
 🌍 A web application that provides geolocation information based on IP addresses.
 
@@ -10,7 +10,7 @@
 
 </div>
 
-![Project Preview](./_assets/preview.webp)
+![Project Preview](/public/geo_ip_preview.webp)
 
 ## ✨ Features
 
