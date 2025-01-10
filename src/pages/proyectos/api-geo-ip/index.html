@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo Location by IP</title>
+</head>
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color-scheme: light dark;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            margin-bottom: clamp(1rem, 2vw, 2rem);
+            color: #3498db;
+            text-align: center;
+        }
+
+        input#ip {
+            padding: 12px 15px;
+            border-radius: 8px;
+            width: clamp(250px, 80vw, 400px);
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            border: 2px solid #3498db;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        input#ip:focus {
+            border-color: #2ecc71;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #9eb3c7;
+            margin: clamp(0.5rem, 1vw, 1rem) 0 clamp(1rem, 2vw, 1.5rem);
+            font-weight: 500;
+            width: clamp(250px, 80vw, 400px);
+            transition: color 0.3s ease;
+        }
+
+        div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .goUp {
+            justify-content: flex-start;
+            padding: clamp(1.5rem, 5vw, 3rem);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            background-color: #3498db;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: all 0.3s ease;
+            width: clamp(250px, 80vw, 400px);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: #2ecc71;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .center {
+            height: 100vh;
+            transition: all 0.5s ease-out;
+            padding: clamp(1rem, 5vw, 2rem);
+        }
+
+        .ipInfo {
+            margin: clamp(1rem, 2vw, 2rem) auto;
+            align-items: normal;
+            padding: clamp(25px, 5vw, 40px);
+            background-color: rgba(52, 152, 219, 0.1);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 12px;
+            width: clamp(250px, 80vw, 400px);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease-out;
+        }
+
+        .ipInfo.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ipInfo h2 {
+            color: #3498db;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .ipInfo p {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.7rem 1rem;
+            margin: 0;
+            font-size: 1.1rem;
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .ipInfo p:hover {
+            background: rgba(52, 152, 219, 0.1);
+            transform: translateX(5px);
+        }
+
+        .ipInfo p::before {
+            margin-bottom: clamp(0.75rem, 1.5vw, 1.5rem);
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .info-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .info-label {
+            font-style: normal;
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #2ecc71;
+            font-weight: 600;
+            min-width: 150px;
+            text-align: right;
+        }
+
+        .info-value.loading {
+            display: inline-block;
+            width: 150px;
+            margin-left: auto;
+        }
+
+        .coordinate-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .coordinate-group .info-value.loading {
+            width: 70px !important;
+            min-width: 70px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: 4px;
+            height: 1.2em;
+            width: 100%;
+            display: inline-block;
+        }
+
+        .skeleton.ip {
+            width: 180px;
+        }
+
+        .skeleton.country {
+            width: 120px;
+        }
+
+        .skeleton.region {
+            width: 150px;
+        }
+
+        .skeleton.city {
+            width: 140px;
+        }
+
+        .skeleton.isp {
+            width: 200px;
+        }
+
+        .skeleton.latitude,
+        .skeleton.longitude {
+            width: 80px;
+        }
+    </style>
+
+    <div class="center">
+        <h1>Geo Location by IP</h1>
+        <input type="text" id="ip">
+        <label for="ip">Enter IP (e.g., 94.123.412.123)</label>
+        <button class="btn">Search IP info</button>
+    </div>
+
+    <div class="ipInfo hidden">
+        <h2>IP Information</h2>
+        <div class="info-grid">
+            <p>
+                <i class="info-label">IP Address</i>
+                <span id="ipInfo" class="info-value"></span>
+            </p>
+            <p>
+                <i class="info-label">Country</i>
+                <span id="country" class="info-value"></span>
+            </p>
+            <p>
+                <i class="info-label">Region</i>
+                <span id="region" class="info-value"></span>
+            </p>
+            <p>
+                <i class="info-label">City</i>
+                <span id="city" class="info-value"></span>
+            </p>
+            <p>
+                <i class="info-label">ISP</i>
+                <span id="isp" class="info-value"></span>
+            </p>
+            <p>
+                <i class="info-label">Cords</i>
+                <span class="coordinate-group">
+                    <span id="latitude" class="info-value"></span>°N,
+                    <span id="longitude" class="info-value"></span>°E
+                </span>
+            </p>
+        </div>
+    </div>
+</body>
+
+<script>
+    // DOM Elements
+    const elements = {
+        button: document.querySelector('.btn'),
+        searchContainer: document.querySelector('.center'),
+        ipInfo: document.querySelector('.ipInfo'),
+        ipInput: document.querySelector('#ip'),
+        infoValues: document.querySelectorAll('.info-value')
+    };
+
+    // Configuration
+    const skeletonClasses = {
+        ipInfo: 'ip',
+        country: 'country',
+        region: 'region',
+        city: 'city',
+        isp: 'isp',
+        latitude: 'small',
+        longitude: 'small'
+    };
+
+    // UI Functions
+    function showIpInfo() {
+        if (elements.ipInfo.classList.contains('hidden')) {
+            elements.ipInfo.classList.remove('hidden');
+            setTimeout(() => {
+                elements.searchContainer.classList.replace('center', 'goUp');
+                elements.ipInfo.classList.add('show');
+            }, 100);
+        }
+    }
+
+    function toggleLoadingState(show) {
+        elements.infoValues.forEach(span => {
+            const skeletonClass = skeletonClasses[span.id];
+            if (show) {
+                span.classList.add('skeleton', 'loading');
+                if (skeletonClass) span.classList.add(skeletonClass);
+                span.textContent = '';
+            } else {
+                span.classList.remove('skeleton', 'loading');
+            }
+        });
+    }
+
+    // Data Functions
+    async function fetchIpData(ip) {
+        const response = await fetch(`https://ipapi.co/${ip}/json/`);
+        return response.json();
+    }
+
+    function updateUIWithData(data) {
+        const dataMapping = {
+            '#ipInfo': 'ip',
+            '#country': 'country_name',
+            '#region': 'region',
+            '#city': 'city',
+            '#isp': 'org',
+            '#latitude': 'latitude',
+            '#longitude': 'longitude'
+        };
+
+        Object.entries(dataMapping).forEach(([selector, property]) => {
+            document.querySelector(selector).textContent = data[property];
+        });
+    }
+
+    // Event Handlers
+    async function handleIpSearch() {
+        showIpInfo();
+        toggleLoadingState(true);
+        try {
+            const data = await fetchIpData(elements.ipInput.value);
+            updateUIWithData(data);
+        } finally {
+            toggleLoadingState(false);
+        }
+    }
+
+    // Event Listeners
+    elements.button.addEventListener('click', handleIpSearch);
+</script>
