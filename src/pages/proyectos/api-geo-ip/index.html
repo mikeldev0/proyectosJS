@@ -7,6 +7,22 @@
 </head>
 <body>
     <style>
+        :root {
+            --primary: #3498db;
+            --success: #2ecc71;
+            --text: #ffffff;
+            --text-secondary: #9eb3c7;
+            --bg: #1a1a1a;
+            --bg-secondary: rgba(52, 152, 219, 0.1);
+            --border: rgba(52, 152, 219, 0.3);
+            --transition: all 0.3s ease;
+            --container-width: clamp(250px, 80vw, 400px);
+            --spacing-sm: clamp(0.5rem, 1vw, 1rem);
+            --spacing-md: clamp(1rem, 2vw, 1.5rem);
+            --spacing-lg: clamp(1.5rem, 5vw, 3rem);
+        }
+
+        /* Reset y estilos base */
         * {
             margin: 0;
             padding: 0;
@@ -15,45 +31,37 @@
 
         html, body {
             height: 100%;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             color-scheme: light dark;
-            background-color: #1a1a1a;
-            color: #ffffff;
+            background-color: var(--bg);
+            color: var(--text);
         }
 
+        /* Tipografía */
         h1 {
             font-size: clamp(1.5rem, 5vw, 2.5rem);
-            margin-bottom: clamp(1rem, 2vw, 2rem);
-            color: #3498db;
+            margin-bottom: 1rem; /* Ajustado el margen inferior */
+            color: var(--primary);
             text-align: center;
         }
 
-        input#ip {
-            padding: 12px 15px;
-            border-radius: 8px;
-            width: clamp(250px, 80vw, 400px);
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-            border: 2px solid #3498db;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+        h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
         }
 
-        input#ip:focus {
-            border-color: #2ecc71;
-            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+        /* Layout Containers */
+        .center {
+            height: 100vh;
+            transition: var(--transition);
+            padding: var(--spacing-lg);
+            gap: 0.5rem; /* Añadir gap entre elementos */
         }
 
-        label {
-            display: block;
-            text-align: left;
-            font-size: 0.9rem;
-            color: #9eb3c7;
-            margin: clamp(0.5rem, 1vw, 1rem) 0 clamp(1rem, 2vw, 1.5rem);
-            font-weight: 500;
-            width: clamp(250px, 80vw, 400px);
-            transition: color 0.3s ease;
+        .goUp {
+            justify-content: flex-start;
+            padding: var(--spacing-lg);
         }
 
         div {
@@ -63,51 +71,69 @@
             justify-content: center;
         }
 
-        .goUp {
-            justify-content: flex-start;
-            padding: clamp(1.5rem, 5vw, 3rem);
+        /* Formulario */
+        .input-group {
+            width: var(--container-width);
+        }
+
+        input#ip {
+            width: var(--container-width);
+            padding: 10px 15px; /* Reducido de 12px a 10px */
+            border-radius: 6px; /* Reducido de 8px a 6px */
+            font-size: 14px; /* Reducido de 16px a 14px */
+            border: 2px solid var(--primary);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        input#ip:focus {
+            border-color: var(--success);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+            outline: none;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem; /* Reducido de 0.9rem a 0.8rem */
+            color: var(--text-secondary);
+            margin: var(--spacing-sm) 0;
+            font-weight: 500;
         }
 
         .btn {
-            padding: 12px 25px;
-            border-radius: 8px;
-            background-color: #3498db;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            outline: none;
-            transition: all 0.3s ease;
-            width: clamp(250px, 80vw, 400px);
-            color: white;
+            width: var(--container-width);
+            padding: 10px 20px; /* Reducido de 12px 25px */
+            border-radius: 6px; /* Reducido de 8px a 6px */
+            background-color: var(--primary);
+            color: var(--text);
+            font-size: 14px; /* Reducido de 16px a 14px */
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
         }
 
         .btn:hover {
-            background-color: #2ecc71;
+            background-color: var(--success);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
         }
 
-        .center {
-            height: 100vh;
-            transition: all 0.5s ease-out;
-            padding: clamp(1rem, 5vw, 2rem);
-        }
-
+        /* IP Info Card */
         .ipInfo {
-            margin: clamp(1rem, 2vw, 2rem) auto;
-            align-items: normal;
-            padding: clamp(25px, 5vw, 40px);
-            background-color: rgba(52, 152, 219, 0.1);
-            border: 1px solid rgba(52, 152, 219, 0.3);
+            width: var(--container-width);
+            margin: 1rem auto;
+            padding: 1.5rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
             border-radius: 12px;
-            width: clamp(250px, 80vw, 400px);
             backdrop-filter: blur(10px);
             opacity: 0;
             transform: translateY(20px);
-            transition: all 0.5s ease-out;
+            transition: var(--transition);
         }
 
         .ipInfo.show {
@@ -115,114 +141,97 @@
             transform: translateY(0);
         }
 
-        .ipInfo h2 {
-            color: #3498db;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
+        .info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            width: 100%;
         }
 
-        .ipInfo p {
+        .info-grid p {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0.7rem 1rem;
-            margin: 0;
-            font-size: 1.1rem;
+            padding: 0.8rem 1rem;
             background: rgba(52, 152, 219, 0.05);
             border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .ipInfo p:hover {
-            background: rgba(52, 152, 219, 0.1);
-            transform: translateX(5px);
-        }
-
-        .ipInfo p::before {
-            margin-bottom: clamp(0.75rem, 1.5vw, 1.5rem);
-            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
-        }
-
-        .info-grid {
-            display: grid;
-            gap: 1rem;
+            transition: var(--transition);
+            justify-content: space-between;
+            min-height: 3rem;
         }
 
         .info-label {
             font-style: normal;
-            color: #3498db;
+            color: var(--text-secondary);
             font-weight: 500;
+            width: 120px;
+            font-size: 0.9rem;
         }
 
         .info-value {
-            color: #2ecc71;
+            color: var(--text);
             font-weight: 600;
-            min-width: 150px;
-            text-align: right;
-        }
-
-        .info-value.loading {
-            display: inline-block;
+            font-size: 0.95rem;
             width: 150px;
-            margin-left: auto;
+            text-align: right;
         }
 
         .coordinate-group {
             display: flex;
             gap: 0.5rem;
+            color: var(--text);
+            width: 150px;
+            justify-content: flex-end;
         }
 
-        .coordinate-group .info-value.loading {
-            width: 70px !important;
-            min-width: 70px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @keyframes loading {
-            0% {
-                background-position: 200% 0;
-            }
-            100% {
-                background-position: -200% 0;
-            }
-        }
-
+        /* Loading States */
         .skeleton {
-            background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+            background: linear-gradient(90deg, 
+                rgba(52, 152, 219, 0.05) 25%, 
+                rgba(52, 152, 219, 0.15) 50%, 
+                rgba(52, 152, 219, 0.05) 75%);
             background-size: 200% 100%;
             animation: loading 1.5s infinite;
             border-radius: 4px;
             height: 1.2em;
-            width: 100%;
-            display: inline-block;
         }
 
-        .skeleton.ip {
-            width: 180px;
+        .info-value.loading {
+            min-width: 150px;
         }
 
-        .skeleton.country {
-            width: 120px;
+        .coordinate-group .info-value.loading {
+            min-width: 70px;
         }
 
-        .skeleton.region {
-            width: 150px;
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
-        .skeleton.city {
-            width: 140px;
-        }
+        /* Utilities */
+        .hidden { display: none; }
 
-        .skeleton.isp {
-            width: 200px;
-        }
+        /* Media Queries */
+        @media (max-width: 600px) {
+            .info-grid p {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                min-height: 4rem;
+            }
 
-        .skeleton.latitude,
-        .skeleton.longitude {
-            width: 80px;
+            .info-value, .coordinate-group {
+                width: 100%;
+                text-align: left;
+            }
+
+            .info-label {
+                width: 100%;
+            }
+
+            .coordinate-group {
+                justify-content: flex-start;
+            }
         }
     </style>
 
@@ -233,34 +242,35 @@
         <button class="btn">Search IP info</button>
     </div>
 
+    <!-- Actualizar la estructura HTML de la tarjeta de información -->
     <div class="ipInfo hidden">
         <h2>IP Information</h2>
         <div class="info-grid">
             <p>
-                <i class="info-label">IP Address</i>
-                <span id="ipInfo" class="info-value"></span>
+                <span class="info-label">IP Address</span>
+                <span id="ipInfo" class="info-value skeleton"></span>
             </p>
             <p>
-                <i class="info-label">Country</i>
-                <span id="country" class="info-value"></span>
+                <span class="info-label">Country</span>
+                <span id="country" class="info-value skeleton"></span>
             </p>
             <p>
-                <i class="info-label">Region</i>
-                <span id="region" class="info-value"></span>
+                <span class="info-label">Region</span>
+                <span id="region" class="info-value skeleton"></span>
             </p>
             <p>
-                <i class="info-label">City</i>
-                <span id="city" class="info-value"></span>
+                <span class="info-label">City</span>
+                <span id="city" class="info-value skeleton"></span>
             </p>
             <p>
-                <i class="info-label">ISP</i>
-                <span id="isp" class="info-value"></span>
+                <span class="info-label">ISP</span>
+                <span id="isp" class="info-value skeleton"></span>
             </p>
             <p>
-                <i class="info-label">Cords</i>
+                <span class="info-label">Coordinates</span>
                 <span class="coordinate-group">
-                    <span id="latitude" class="info-value"></span>°N,
-                    <span id="longitude" class="info-value"></span>°E
+                    <span id="latitude" class="info-value skeleton"></span>°N,
+                    <span id="longitude" class="info-value skeleton"></span>°E
                 </span>
             </p>
         </div>
@@ -349,3 +359,4 @@
     // Event Listeners
     elements.button.addEventListener('click', handleIpSearch);
 </script>
+</html>
