@@ -189,6 +189,24 @@
             animation: slideIn 0.3s ease;
         }
 
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .footer a {
+            color: #3182ce;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: #4299e1;
+            text-decoration: none;
+        }
+
         @keyframes slideIn {
             from {
             transform: translateY(-10px);
@@ -236,6 +254,54 @@
             }
             #fileInput {
                 border-color: #404040;
+            }
+        }
+
+        /* Mejoras responsivas añadidas */
+        @media (max-width: 768px) {
+            body {
+                width: 90%;
+                padding: 0.75rem;
+            }
+
+            #gradient-title {
+                font-size: clamp(1.3rem, 4vw, 2.2rem);
+            }
+
+            #description {
+                font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+            }
+
+            .input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            #fileInput, #markdownInput, #markdownOutput {
+                width: 100%;
+            }
+
+            textarea#markdownInput {
+                height: clamp(120px, 25vh, 250px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                width: 95%;
+                padding: 0.5rem;
+            }
+
+            #gradient-title {
+                font-size: clamp(1.2rem, 5vw, 2rem);
+            }
+
+            #description {
+                font-size: clamp(0.75rem, 2vw, 1rem);
+            }
+
+            textarea#markdownInput {
+                height: clamp(100px, 20vh, 200px);
             }
         }
 
@@ -437,6 +503,10 @@
         </div>
 
         <div id="markdownOutput" role="region" aria-label="Markdown Preview" hidden></div>
+
+        <footer class="footer">
+            <p>Made with ❤️ by <a href="https://www.mikeldev.com" target="_blank" rel="noopener">Mikel</a></p>
+        </footer>
     </main>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
