@@ -10,6 +10,7 @@
     <meta property="og:type" content="website">
     <link rel="canonical" href="https://proyectosjs.mikeldev.com/markdown-visualizer">
     <link rel="shortcut icon" href="public/images/md_visualizer.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Markdown Visualizer - Real-time Editor</title>
     <style>
         * {
@@ -31,11 +32,12 @@
             font-family: system-ui, -apple-system, sans-serif;
             background-color: #fafafa;
             color: #1a1a1a;
+            font-size: 1rem;
         }
     
         #gradient-title {
             text-align: center;
-            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
             margin: 1rem 0;
             background: linear-gradient(90deg, #4CAF50, #2196F3);
             -webkit-background-clip: text;
@@ -48,10 +50,9 @@
 
         #description {
             text-align: center;
-            font-size: 1rem;
+            font-size: clamp(1rem, 2.5vw, 1.3rem);
             margin-bottom: 1.5rem;
             color: #4a5568;
-            font-size: clamp(0.875rem, 3vw, 1.25rem);
         }
     
         .input-container {
@@ -183,6 +184,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            align-items: center;
         }
 
         #errorMessage {
@@ -265,11 +267,11 @@
             }
 
             #gradient-title {
-                font-size: clamp(1.3rem, 4vw, 2.2rem);
+                font-size: clamp(1.5rem, 4vw, 2.5rem);
             }
 
             #description {
-                font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
             }
 
             .input-container {
@@ -284,6 +286,19 @@
             textarea#markdownInput {
                 height: clamp(120px, 25vh, 250px);
             }
+
+            .button-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .button-container button,
+            .validate-container button,
+            .syntax-validation button {
+                width: 100%;
+                font-size: 1.1rem;
+                padding: 0.8rem 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -293,15 +308,33 @@
             }
 
             #gradient-title {
-                font-size: clamp(1.2rem, 5vw, 2rem);
+                font-size: clamp(1.3rem, 5vw, 2rem);
             }
 
             #description {
-                font-size: clamp(0.75rem, 2vw, 1rem);
+                font-size: clamp(0.8rem, 2vw, 1rem);
             }
 
             textarea#markdownInput {
                 height: clamp(100px, 20vh, 200px);
+            }
+
+            .button-container button,
+            .validate-container button,
+            .syntax-validation button {
+                font-size: 1rem;
+                padding: 0.6rem 1.2rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .button-container {
+                gap: 0.75rem;
+            }
+
+            #markdownInput,
+            #markdownOutput {
+                font-size: 0.95rem;
             }
         }
 
@@ -486,6 +519,178 @@
             color: #63b3ed;
             }
         }
+
+        /* Estilos para los botones de exportación y validación */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .button-container button {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #63b3ed;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 1.2rem; /* Aumentar el tamaño de los iconos */
+        }
+
+        .button-container button:hover {
+            background-color: #4299e1;
+        }
+
+        .export-section span {
+            font-weight: bold;
+        }
+
+        /* Ajustar el orden para que las etiquetas estén arriba del input */
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            width: 100%;
+        }
+
+        /* Estilos para el contenedor de validar */
+        .validate-container button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #38a169; /* Color verde diferente */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 1.2rem;
+        }
+
+        .validate-container button:hover {
+            background-color: #2f855a;
+        }
+
+        /* Ajustar estilos de los botones de exportación si es necesario */
+        .button-container button {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #63b3ed;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 1.2rem;
+        }
+
+        .button-container button:hover {
+            background-color: #4299e1;
+        }
+
+        .button-container button,
+        .validate-container button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .button-container button:hover,
+        .validate-container button:hover {
+            background-color: #e0e0e0;
+            color: #000;
+        }
+
+        /* Estilos para la nueva sección de validación */
+        .syntax-validation {
+            text-align: center;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .syntax-validation button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .syntax-validation button:hover {
+            background-color: #e0e0e0;
+            color: #000;
+        }
+
+        /* Minimalist styles for the validate button */
+        .syntax-validation button {
+            padding: 0.3rem 0.6rem;
+            border: none;
+            background-color: transparent;
+            color: #38a169;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .syntax-validation button:hover {
+            color: #2f855a;
+        }
+
+        /* Dark mode styles for export buttons */
+        @media (prefers-color-scheme: dark) {
+            .button-container button {
+                background-color: #4a5568;
+                color: #f7fafc;
+                border: 1px solid #2d3748;
+            }
+
+            .button-container button:hover {
+                background-color: #2d3748;
+                color: #e2e8f0;
+            }
+        }
+
+        /* Centrando la sección de exportación */
+        .export-section {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Estilos para mensajes de éxito */
+        .success {
+            color: #38a169;
+            background-color: #f0fff4;
+            border: 1px solid #c6f6d5;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success::before {
+            content: "✅";
+            font-size: 1.1em;
+        }
     </style>
 </head>
 <body>
@@ -502,7 +707,34 @@
             <textarea id="markdownInput" placeholder="Write or paste your Markdown content here" aria-label="Markdown Editor"></textarea>
         </div>
 
+        <!-- Nueva sección para validar sintaxis -->
+        <div class="syntax-validation">
+            <button id="validateBtn" aria-label="Validar Sintaxis">
+                <i class="fas fa-check-circle"></i> Validar Sintaxis
+            </button>
+        </div>
+
+        <div class="export-section" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <span style="font-size: 0.9rem; color: #4a5568;">Exportar en:</span>
+        </div>
+
         <div id="markdownOutput" role="region" aria-label="Markdown Preview" hidden></div>
+
+        <!-- Contenedor existente para los botones de exportación -->
+        <div class="button-container">
+            <button id="exportPdfBtn" aria-label="Exportar a PDF">
+                <i class="fas fa-file-pdf"></i> PDF
+            </button>
+            <button id="exportHtmlBtn" aria-label="Exportar a HTML">
+                <i class="fas fa-file-code"></i> HTML
+            </button>
+            <button id="exportWordBtn" aria-label="Exportar a Word">
+                <i class="fas fa-file-word"></i> Word
+            </button>
+            <button id="exportMarkdownBtn" aria-label="Exportar a Markdown">
+                <i class="fas fa-file-alt"></i> Markdown
+            </button>
+        </div>
 
         <footer class="footer">
             <p>Made with ❤️ by <a href="https://www.mikeldev.com" target="_blank" rel="noopener">Mikel</a></p>
@@ -555,6 +787,125 @@
 
     fileInput.addEventListener('change', handleFileChange);
     markdownInput.addEventListener('input', (e) => renderMarkdown(e.target.value));
+
+    // Función de validación de sintaxis mejorada
+    const validateSyntax = () => {
+        const markdown = markdownInput.value;
+        let errores = [];
+
+        // Regla 1: El documento debe comenzar con un encabezado de nivel 1
+        if (!markdown.startsWith('# ')) {
+            errores.push('El documento debe comenzar con un encabezado de nivel 1 (por ejemplo, "# Título").');
+        }
+
+        // Regla 2: Verificar que todos los enlaces tengan texto y URL
+        const enlaceRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+        let match;
+        while ((match = enlaceRegex.exec(markdown)) !== null) {
+            if (!match[1].trim() || !match[2].trim()) {
+                errores.push('Todos los enlaces deben tener texto y una URL válida.');
+                break;
+            }
+        }
+
+        // Regla 3: Verificar que todas las imágenes tengan texto alternativo
+        const imagenRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
+        while ((match = imagenRegex.exec(markdown)) !== null) {
+            if (!match[1].trim()) {
+                errores.push('Todas las imágenes deben tener un texto alternativo (alt text).');
+                break;
+            }
+        }
+
+        // Regla 4: Verificar que los bloques de código estén correctamente cerrados
+        const codigoRegex = /```[\s\S]*?```/g;
+        const codigoMatches = markdown.match(codigoRegex);
+        if (codigoMatches && codigoMatches.length !== (markdown.match(/```/g) || []).length / 2) {
+            errores.push('Todos los bloques de código deben estar correctamente cerrados con ```.');
+        }
+
+        // Regla 5: Verificar que no haya saltos de niveles en encabezados
+        const encabezadoRegex = /^#{2,6} /gm;
+        let previousLevel = 1;
+        while ((match = encabezadoRegex.exec(markdown)) !== null) {
+            const level = match[0].split('#').length - 1;
+            if (level > previousLevel + 1) {
+                errores.push('Los niveles de encabezado no deben saltarse (por ejemplo, saltar de H2 a H4).');
+                break;
+            }
+            previousLevel = level;
+        }
+
+        // Mostrar errores o éxito en la interfaz
+        if (errores.length > 0) {
+            errorMessage.textContent = 'Errores de sintaxis:\n' + errores.join('\n');
+            errorMessage.classList.remove('success');
+            errorMessage.classList.add('error');
+            errorMessage.style.display = 'block';
+            errorMessagesContainer.style.display = 'block';
+            markdownOutput.hidden = true;
+        } else {
+            errorMessage.textContent = '¡Sintaxis correcta!';
+            errorMessage.classList.remove('error');
+            errorMessage.classList.add('success');
+            errorMessage.style.display = 'block';
+            errorMessagesContainer.style.display = 'block';
+            markdownOutput.hidden = false;
+        }
+    };
+
+    // Función para exportar a PDF
+    const exportToPDF = () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const markdown = markdownInput.value;
+        const parsedHtml = marked.parse(markdown);
+        doc.text(parsedHtml, 10, 10);
+        doc.save('documento.pdf');
+    };
+
+    // Función para exportar a HTML
+    const exportToHTML = () => {
+        const markdown = markdownInput.value;
+        const htmlContent = marked.parse(markdown);
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'documento.html';
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+
+    // Función para exportar a Word
+    const exportToWord = () => {
+        const markdown = markdownInput.value;
+        const htmlContent = marked.parse(markdown);
+        const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'documento.doc';
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+
+    // Función para exportar a Markdown
+    const exportToMarkdown = () => {
+        const markdown = markdownInput.value;
+        const blob = new Blob([markdown], { type: 'text/markdown' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'documento.md';
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+
+    // Asignar eventos a los botones
+    document.getElementById('validateBtn').addEventListener('click', validateSyntax);
+    document.getElementById('exportPdfBtn').addEventListener('click', exportToPDF);
+    document.getElementById('exportHtmlBtn').addEventListener('click', exportToHTML);
+    document.getElementById('exportWordBtn').addEventListener('click', exportToWord);
+    document.getElementById('exportMarkdownBtn').addEventListener('click', exportToMarkdown);
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </html>
