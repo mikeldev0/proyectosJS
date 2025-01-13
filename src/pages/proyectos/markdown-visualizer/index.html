@@ -33,7 +33,7 @@
             color: #1a1a1a;
         }
     
-        h1 {
+        #gradient-title {
             text-align: center;
             font-size: clamp(1.5rem, 5vw, 2.5rem);
             margin: 1rem 0;
@@ -46,7 +46,7 @@
             letter-spacing: 1px;
         }
 
-        p {
+        #description {
             text-align: center;
             font-size: 1rem;
             margin-bottom: 1.5rem;
@@ -128,9 +128,6 @@
                 background-color: #1a1a1a;
                 color: #e5e5e5;
             }
-            h1 {
-                color: #e5e5e5;
-            }
             #markdownInput, #markdownOutput {
                 background-color: #2d2d2d;
                 border-color: #404040;
@@ -140,12 +137,194 @@
                 border-color: #404040;
             }
         }
+
+        /* Markdown output styles */
+        #markdownOutput h1, #markdownOutput h2, 
+        #markdownOutput h3, #markdownOutput h4,
+        #markdownOutput h5, #markdownOutput h6 {
+            font-family: system-ui, -apple-system, sans-serif;
+            transition: color 0.2s ease;
+        }
+
+        #markdownOutput h1 {
+            font-size: 2em;
+            margin: 0.67em 0;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.3em;
+        }
+
+        #markdownOutput h2 {
+            font-size: 1.5em;
+            margin: 0.83em 0;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.3em;
+        }
+
+        #markdownOutput h3 {
+            font-size: 1.17em;
+            margin: 1em 0;
+            padding-bottom: 0.2em;
+        }
+
+        #markdownOutput h4 { font-size: 1em; margin: 1.33em 0; }
+        #markdownOutput h5 { font-size: 0.83em; margin: 1.67em 0; }
+        #markdownOutput h6 { font-size: 0.67em; margin: 2.33em 0; }
+
+        #markdownOutput h1:hover, #markdownOutput h2:hover,
+        #markdownOutput h3:hover, #markdownOutput h4:hover,
+        #markdownOutput h5:hover, #markdownOutput h6:hover {
+            color: #3182ce;
+        }
+
+        #markdownOutput p {
+            margin: 1em 0;
+            line-height: 1.6;
+            font-family: system-ui, -apple-system, sans-serif;
+            transition: transform 0.2s ease;
+        }
+
+        #markdownOutput p:hover {
+            transform: translateX(4px);
+        }
+
+        #markdownOutput code {
+            background-color: #f0f0f0;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+        }
+
+        #markdownOutput code:hover {
+            background-color: #3d3d3d;
+            transform: scale(1.02);
+        }
+
+        #markdownOutput pre {
+            background-color: #f6f8fa;
+            padding: 1.2em;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1em 0;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        #markdownOutput pre:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-color: #3182ce;
+        }
+
+        #markdownOutput pre code {
+            background: none;
+            padding: 0;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        #markdownOutput blockquote {
+            border-left: 4px solid #e2e8f0;
+            margin: 1em 0;
+            padding: 0.5em 1em;
+            color: #718096;
+            transition: all 0.2s ease;
+        }
+
+        #markdownOutput blockquote:hover {
+            border-left-color: #3182ce;
+            background-color: rgba(49, 130, 206, 0.05);
+        }
+
+        #markdownOutput ul, #markdownOutput ol {
+            margin: 1em 0;
+            padding-left: 2em;
+            line-height: 1.6;
+        }
+
+        #markdownOutput li {
+            margin: 0.5em 0;
+            transition: transform 0.2s ease;
+        }
+
+        #markdownOutput li:hover {
+            transform: translateX(4px);
+        }
+
+        #markdownOutput a {
+            color: #3182ce;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        #markdownOutput a:hover {
+            color: #4299e1b7;
+            text-decoration: none;
+            transform: translateY(-1px);
+            text-shadow: 0 1px 2px rgba(66, 153, 225, 0.2);
+            transition: all 0.2s ease-in-out;
+        }
+
+        #markdownOutput img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        #markdownOutput img:hover {
+            transform: scale(1.01);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        #markdownOutput hr {
+            border: none;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 2em 0;
+            border-radius: 2px;
+            transition: all 0.2s ease;
+        }
+
+        #markdownOutput hr:hover {
+            background: #3182ce;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            #markdownOutput code {
+            background-color: #2d2d2d;
+            }
+            
+            #markdownOutput pre {
+            background-color: #2d2d2d;
+            border-color: #404040;
+            }
+            
+            #markdownOutput blockquote {
+            border-color: #404040;
+            color: #a0aec0;
+            }
+            
+            #markdownOutput a {
+            color: #63b3ed;
+            }
+
+            #markdownOutput hr {
+            background: #404040;
+            }
+
+            #markdownOutput h1:hover, #markdownOutput h2:hover,
+            #markdownOutput h3:hover, #markdownOutput h4:hover,
+            #markdownOutput h5:hover, #markdownOutput h6:hover {
+            color: #63b3ed;
+            }
+        }
     </style>
 </head>
 <body>
     <main>
-        <h1>Markdown Visualizer</h1>
-        <p>Markdown Visualizer is a tool that allows you to view the content of a Markdown file (.md) in real time.</p>
+        <h1 id="gradient-title">Markdown Visualizer</h1>
+        <p id="description">Markdown Visualizer is a tool that allows you to view the content of a Markdown file (.md) in real time.</p>
 
         <div class="input-container">
             <input type="file" id="fileInput" accept=".md" aria-label="Select Markdown file">
@@ -155,4 +334,39 @@
         <div id="markdownOutput" role="region" aria-label="Markdown Preview"></div>
     </main>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const markdownInput = document.getElementById('markdownInput');
+    const markdownOutput = document.getElementById('markdownOutput');
+
+    const renderMarkdown = (markdown) => {
+        try {
+            const parsedHtml = DOMPurify.sanitize(marked.parse(markdown));
+            markdownOutput.innerHTML = parsedHtml;
+        } catch (error) {
+            console.error('Error parsing markdown:', error);
+            markdownOutput.innerHTML = '<p class="error">Error parsing markdown content</p>';
+        }
+    };
+
+    const handleFileChange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        try {
+            const content = await file.text();
+            markdownInput.value = content;
+            renderMarkdown(content);
+        } catch (error) {
+            console.error('Error reading file:', error);
+            markdownInput.value = '';
+            markdownOutput.innerHTML = '<p class="error">Error reading file</p>';
+        }
+    };
+
+    fileInput.addEventListener('change', handleFileChange);
+    markdownInput.addEventListener('input', (e) => renderMarkdown(e.target.value));
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
 </html>
