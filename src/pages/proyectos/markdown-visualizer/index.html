@@ -62,15 +62,68 @@
             margin: 1.5rem 0;
             width: 100%;
         }
-    
+
         #fileInput {
             width: 100%;
-            max-width: 400px;
-            padding: 0.625rem;
-            border: 2px dashed #cbd5e0;
+            padding: 0.75rem;
+            border: 2px dashed #e2e8f0;
             border-radius: 6px;
+            font-size: 1rem;
+            background-color: transparent;
+            color: inherit;
+            transition: all 0.2s ease;
             cursor: pointer;
         }
+
+        #fileInput:hover {
+            border-color: #63b3ed;
+            background-color: rgba(99, 179, 237, 0.05);
+        }
+
+        #fileInput::file-selector-button {
+            background: none;
+            color: inherit;
+            padding: 0.5rem 1rem;
+            border: none;
+            cursor: pointer;
+            margin-right: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        #fileInput::file-selector-button:hover {
+            opacity: 0.8;
+        }
+
+        .drag-over {
+            border-color: #63b3ed !important;
+            background-color: rgba(99, 179, 237, 0.1) !important;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-container::before {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #666;
+            pointer-events: none;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            #fileInput::file-selector-button {
+                background: none;
+            }
+            
+            .input-container::before {
+                color: #999;
+            }
+        }
+
     
         #markdownInput {
             width: 100%;
@@ -107,6 +160,11 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
+        .error {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
         @media (max-width: 480px) {
             body {
                 padding: 0.5rem;
@@ -138,7 +196,7 @@
             }
         }
 
-        /* Markdown output styles */
+        /* ------------------ Markdown output styles ------------------ */
         #markdownOutput h1, #markdownOutput h2,
         #markdownOutput h3, #markdownOutput h4,
         #markdownOutput h5, #markdownOutput h6 {
