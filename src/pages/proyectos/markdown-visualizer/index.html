@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"></html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -161,8 +161,51 @@
         }
 
         .error {
-            color: #e53e3e;
-            font-weight: 600;
+            color: #dc2626;
+            font-weight: 500;
+            background-color: #fef2f2;
+            border: 1px solid #fee2e2;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .error::before {
+            content: "⚠️";
+            font-size: 1.1em;
+        }
+
+        .error-messages {
+            margin: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        #errorMessage {
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+            transform: translateY(-10px);
+            opacity: 0;
+            }
+            to {
+            transform: translateY(0);
+            opacity: 1;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .error {
+            background-color: #3d1919;
+            border-color: #581818;
+            color: #fecaca;
+            }
         }
 
         @media (max-width: 480px) {
@@ -384,12 +427,16 @@
         <h1 id="gradient-title">Markdown Visualizer</h1>
         <p id="description">Markdown Visualizer is a tool that allows you to view the content of a Markdown file (.md) in real time.</p>
 
+        <div class="error-messages" style="display: none;">
+            <p id="errorMessage" class="error">Error parsing markdown content</p>
+        </div>
+        
         <div class="input-container">
             <input type="file" id="fileInput" accept=".md" aria-label="Select Markdown file">
             <textarea id="markdownInput" placeholder="Write or paste your Markdown content here" aria-label="Markdown Editor"></textarea>
         </div>
 
-        <div id="markdownOutput" role="region" aria-label="Markdown Preview"></div>
+        <div id="markdownOutput" role="region" aria-label="Markdown Preview" hidden></div>
     </main>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -397,14 +444,22 @@
     const fileInput = document.getElementById('fileInput');
     const markdownInput = document.getElementById('markdownInput');
     const markdownOutput = document.getElementById('markdownOutput');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorMessagesContainer = document.querySelector('.error-messages');
 
     const renderMarkdown = (markdown) => {
         try {
             const parsedHtml = DOMPurify.sanitize(marked.parse(markdown));
             markdownOutput.innerHTML = parsedHtml;
+            markdownOutput.hidden = !markdown.trim();
+            errorMessage.style.display = 'none';
+            errorMessagesContainer.style.display = 'none';
         } catch (error) {
             console.error('Error parsing markdown:', error);
-            markdownOutput.innerHTML = '<p class="error">Error parsing markdown content</p>';
+            errorMessage.textContent = 'Error parsing markdown content';
+            errorMessage.style.display = 'block';
+            errorMessagesContainer.style.display = 'block';
+            markdownOutput.hidden = true;
         }
     };
 
@@ -416,10 +471,15 @@
             const content = await file.text();
             markdownInput.value = content;
             renderMarkdown(content);
+            errorMessage.hidden = true;
+            errorMessagesContainer.hidden = true;
         } catch (error) {
             console.error('Error reading file:', error);
             markdownInput.value = '';
-            markdownOutput.innerHTML = '<p class="error">Error reading file</p>';
+            errorMessage.textContent = 'Error reading file';
+            errorMessage.hidden = false;
+            errorMessagesContainer.hidden = false;
+            markdownOutput.hidden = true;
         }
     };
 
