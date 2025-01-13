@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="public/images/md_visualizer.svg" type="image/x-icon">
+    <title>Markdown Visualizer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        html {
+            font-size: 16px;
+            color-scheme: light dark;
+        }
+        body {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #fafafa;
+            color: #1a1a1a;
+        }
+    
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin: 1.5rem 0;
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+    
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+    
+        #fileInput {
+            padding: 10px;
+            border: 2px dashed #cbd5e0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    
+        #markdownInput {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            resize: none;
+            background-color: white;
+            color: #2d3748;
+        }
+    
+        #markdownOutput {
+            margin-top: 2rem;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+    
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1a1a1a;
+                color: #e5e5e5;
+            }
+            h1 {
+                color: #e5e5e5;
+            }
+            #markdownInput, #markdownOutput {
+                background-color: #2d2d2d;
+                border-color: #404040;
+                color: #e5e5e5;
+            }
+            #fileInput {
+                border-color: #404040;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Markdown Visualizer</h1>
+    <p>Markdown Visualizer es una herramienta que te permite visualizar el contenido de un archivo Markdown (.md) en tiempo real.</p>
+
+    <div class="input-container">
+        <input type="file" id="fileInput" accept=".md">
+        <textarea id="markdownInput" placeholder="Escribe o pega tu contenido Markdown aquí"></textarea>
+    </div>
+
+    <div id="markdownOutput"></div>
+</body>
+</html>
