@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100">
+    <!-- Gradients -->
+    <defs>
+        <linearGradient id="eye-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#4CAF50"/>
+            <stop offset="100%" style="stop-color:#2196F3"/>
+        </linearGradient>
+    </defs>
+    
+    <!-- Simple background circle -->
+    <circle cx="50" cy="50" r="40" fill="none" stroke="#4CAF50" stroke-width="2"/>
+    
+    <!-- Centered eye with gradient -->
+    <g transform="translate(50, 50) scale(0.7)">
+        <path d="M-25,0 C-10,0 10,-20 25,0 C10,20 -10,20 -25,0" 
+              fill="url(#eye-gradient)" 
+              stroke="none"/>
+        <circle cx="0" cy="0" r="6" fill="#fff"/>
+        <circle cx="0" cy="0" r="3" fill="#1976D2"/>
+    </g>
+    
+    <!-- Minimal MD text -->
+    <text x="38" y="70" 
+            font-family="monospace" 
+            font-size="14" 
+            fill="#4CAF50">
+        MD
+    </text>
+</svg>
