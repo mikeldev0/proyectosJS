@@ -1,0 +1,62 @@
+<div class="loading-container">
+    <img src="/js.svg" alt="Cargando" class="loading-image" />
+</div>
+
+<script>
+    window.addEventListener('load', () => {
+        const loadingContainer = document.querySelector('.loading-container') as HTMLElement;
+        if (loadingContainer) {
+            loadingContainer.style.opacity = '0';
+            setTimeout(() => {
+                loadingContainer.style.display = 'none';
+            }, 500);
+        }
+    });
+</script>
+
+<style>
+    .loading-container {
+        position: fixed;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out;
+    }
+
+    .loading-image {
+        width: clamp(50px, 10vw, 100px);
+        height: clamp(50px, 10vw, 100px);
+        border-radius: 12px;
+        animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+        0% {
+            transform: scale(0.95);
+        }
+        50% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(0.95);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .loading-container {
+            border-radius: 0;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .loading-image {
+            width: clamp(30px, 8vw, 50px);
+            height: clamp(30px, 8vw, 50px);
+        }
+    }
+</style>

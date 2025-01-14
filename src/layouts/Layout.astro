@@ -1,4 +1,6 @@
 ---
+import Loading from '../components/Loading.astro';
+
 const DEFAULT_URL = "https://proyectosjs.mikeldev.com";
 interface Metadata {
 	property?: string;
@@ -96,6 +98,7 @@ const {
 		</script>
 	</head>
 	<body>
+		 <Loading />
 		<slot />
 	</body>
 </html>
