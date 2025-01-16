@@ -42,16 +42,6 @@ import { FaUser } from 'react-icons/fa';
         object-fit: cover;
         transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
-    .profile-image:hover {
-        transform: rotate(360deg) scale(1.2);
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-    }
-
-    .profile-image.loaded:hover {
-        transform: rotate(360deg) scale(1.2);
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-    }
 
     .image-container {
         position: relative;
@@ -78,6 +68,13 @@ import { FaUser } from 'react-icons/fa';
         }
     }
 
+    @media (min-width: 769px) {
+        .profile-image.loaded:hover {
+            transform: rotate(360deg) scale(1.2);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+    }
+
     @media (max-width: 768px) {
         .left-container {
             position: static;
@@ -101,6 +98,12 @@ import { FaUser } from 'react-icons/fa';
             z-index: 1;
             width: 35px;
             height: 35px;
+        }
+    
+        
+        .profile-image.loaded:active {
+            transform: rotate(360deg) scale(1.2);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
     }
     header {
