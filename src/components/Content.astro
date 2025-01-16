@@ -69,8 +69,10 @@
 		}
 	}
 
-	.icon-js:hover {
-		transform: rotate(0) scale(1.2);
+	@media (min-width: 769px) {
+		.icon-js:hover {
+			transform: rotate(0) scale(1.2);
+		}
 	}
 
 	@media (min-width: 559px) and (max-width: 767px) {
@@ -100,6 +102,10 @@
 		.icon-js {
 			width: 50vw;
 			height: 50vw;
+		}
+
+		.icon-js:active {
+			transform: rotate(0) scale(1.1);
 		}
 	}
 </style>
