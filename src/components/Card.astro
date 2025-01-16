@@ -177,6 +177,15 @@ const { img, title, description, demo, source } = proyecto;
             margin: 1rem 0;
             max-width: 100%;
         }
+
+        .card:active {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2);
+        }
+
+        .card:active .card-image img {
+            transform: scale(1.05);
+        }
     }
 
     @media (min-width: 640px) {
