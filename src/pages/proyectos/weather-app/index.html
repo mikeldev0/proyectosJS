@@ -21,7 +21,7 @@
             font-size: 16px;
             line-height: 1.6;
             color: #fff;
-            background: url('./img/background.webp') no-repeat center center fixed;
+            background: url('/proyectos/weather-bg.webp') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
         }
@@ -264,8 +264,8 @@
             <span id="weather-description">Cloudy</span>
         </div>
         <div class="min-max">
-            <span id="min-temp">Min: 3ºC</span>
-            <span id="max-temp">Max: 7ºC</span>
+            <p>Min: <span id="min-temp"> 3</span>ºC</p>
+            <p>Max: <span id="max-temp">7</span>ºC</p>
         </div>
     </section>
 
@@ -301,5 +301,170 @@
             </ul>
         </div>
     </section>
+
+    <script defer type="module">
+        const API_KEY = process.env.WEATHER_API_KEY;
+        const BASE_URL = 'https://api.openweathermap.org/data/3.0';
+
+        const search = document.getElementById('search');
+        const searchIcon = document.querySelector('.search-container i');
+        const locationLabel = document.getElementById('location-label');
+        const city = document.getElementById('city');
+        const currentTemp = document.getElementById('current-temp');
+        const weatherIcon = document.getElementById('weather-icon');
+        const weatherDescription = document.getElementById('weather-description');
+        const minTemp = document.getElementById('min-temp');
+        const maxTemp = document.getElementById('max-temp');
+        const forecastList = document.querySelector('.forecast-list');
+
+        const updateWeatherUI = (data) => {
+            locationLabel.textContent = data.name;
+            city.textContent = data.name;
+            currentTemp.textContent = `${Math.round(data.main.temp)}ºC`;
+            const iconClass = getWeatherIcon(data.weather[0].main);
+            weatherIcon.className = iconClass;
+            weatherDescription.textContent = data.weather[0].description;
+            minTemp.textContent = Math.round(data.main.temp_min);
+            maxTemp.textContent = Math.round(data.main.temp_max);
+        };
+
+        const getWeatherIcon = (weatherMain) => {
+            const icons = {
+                Clear: 'fas fa-sun',
+                Clouds: 'fas fa-cloud',
+                Rain: 'fas fa-cloud-rain',
+                Snow: 'fas fa-snowflake',
+                Thunderstorm: 'fas fa-bolt',
+                Drizzle: 'fas fa-cloud-rain',
+                Mist: 'fas fa-smog'
+            };
+            return icons[weatherMain] || 'fas fa-cloud';
+        };
+
+        const getWeather = async (city) => {
+            try {
+                const response = await fetch(`${BASE_URL}/weather?q=${city}&appid=${API_KEY}&units=metric`);
+                if (!response.ok) throw new Error('City not found');
+                const data = await response.json();
+                updateWeatherUI(data);
+            } catch (error) {
+                alert(error.message);
+            }
+        };
+
+        const getForecast = async (city) => {
+            try {
+                const response = await fetch(`${BASE_URL}/forecast?q=${city}&appid=${API_KEY}&units=metric`);
+                if (!response.ok) throw new Error('Forecast not available');
+                const data = await response.json();
+
+                forecastList.innerHTML = '';
+                data.list.filter((_, index) => index % 8 === 0).forEach(day => {
+                    const date = new Date(day.dt * 1000);
+                    const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+                    const iconClass = getWeatherIcon(day.weather[0].main);
+
+                    const li = document.createElement('li');
+                    li.classList.add('day');
+                    li.innerHTML = `
+                        <h4>${dayName}</h4>
+                        <i class="${iconClass}"></i>
+                        <span>${Math.round(day.main.temp)}ºC</span>
+                    `;
+                    forecastList.appendChild(li);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        const getWeatherByCoords = async (lat, lon) => {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+                );
+                if (!response.ok) throw new Error('Weather data not available');
+                const data = await response.json();
+                updateWeatherUI(data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching weather:', error);
+                alert('Could not get weather for your location');
+            }
+        };
+
+        const getForecastByCoords = async (lat, lon) => {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+                );
+                if (!response.ok) throw new Error('Forecast not available');
+                const data = await response.json();
+                updateForecastUI(data);
+            } catch (error) {
+                console.error('Error fetching forecast:', error);
+            }
+        };
+
+        const updateForecastUI = (data) => {
+            forecastList.innerHTML = '';
+            const dailyData = data.list.filter((_, index) => index % 8 === 0);
+            
+            dailyData.forEach(day => {
+                const date = new Date(day.dt * 1000);
+                const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+                const iconClass = getWeatherIcon(day.weather[0].main);
+
+                const li = document.createElement('li');
+                li.classList.add('day');
+                li.innerHTML = `
+                    <h4>${dayName}</h4>
+                    <i class="${iconClass}"></i>
+                    <span>${Math.round(day.main.temp)}ºC</span>
+                `;
+                forecastList.appendChild(li);
+            });
+        };
+
+        const handleGeolocation = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const { latitude, longitude } = position.coords;
+                        try {
+                            await getWeatherByCoords(latitude, longitude);
+                            await getForecastByCoords(latitude, longitude);
+                        } catch (error) {
+                            console.error('Error getting weather data:', error);
+                            alert('Could not get weather data for your location');
+                        }
+                    },
+                    (error) => {
+                        console.error('Geolocation error:', error);
+                        alert('Could not get your location. Please search for a city manually.');
+                        getWeather('Madrid'); // Ciudad por defecto
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser');
+                getWeather('Madrid'); // Ciudad por defecto
+            }
+        };
+
+        const handleSearch = () => {
+            const cityValue = search.value.trim();
+            if (cityValue) {
+                getWeather(cityValue);
+                getForecast(cityValue);
+            }
+        };
+
+        searchIcon.addEventListener('click', handleSearch);
+        search.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSearch();
+        });
+
+        window.addEventListener('load', handleGeolocation);
+    </script>
 </body>
 </html>
