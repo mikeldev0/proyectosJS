@@ -255,6 +255,10 @@
             h3 {
                 font-size: 1.5rem;
             }
+
+            .text-weather i, .min-max i, .day i {
+                font-size: clamp(1.2rem, 5vw, 2rem);
+            }
         }
 
         /* Tablets */
@@ -286,6 +290,10 @@
             h3 {
                 font-size: 1.8rem;
             }
+
+            .text-weather i, .min-max i, .day i {
+                font-size: clamp(1.6rem, 4.5vw, 2.3rem); /* Incrementado el tamaño mínimo y máximo */
+            }
         }
 
         /* Laptops */
@@ -316,6 +324,10 @@
 
             h3 {
                 font-size: 2rem;
+            }
+
+            .text-weather i, .min-max i, .day i {
+                font-size: clamp(1.6rem, 4vw, 2.3rem);
             }
         }
 
@@ -350,11 +362,15 @@
             h3 {
                 font-size: 2.5rem;
             }
+
+            .text-weather i, .min-max i, .day i {
+                font-size: clamp(1.6rem, 3vw, 2.3rem); /* Reducido el tamaño mínimo y máximo */
+            }
         }
 
         /* Asegurar que las imágenes e iconos se escalen correctamente */
         .text-weather i, .min-max i, .day i {
-            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
         }
 
         /* Mejorar la lista de pronósticos para dispositivos táctiles */
@@ -517,7 +533,7 @@
                 if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
                 if (!response.ok) throw new Error('Weather data not available');
                 const data = await response.json();
-                updateWeatherUI(data.current, "Current Location"); // Pass city name
+                updateWeatherUI(data.current, data.location.name);
                 updateForecastUI(data.forecast.forecastday);
                 return data;
             } catch (error) {
