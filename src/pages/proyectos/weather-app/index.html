@@ -81,18 +81,22 @@
             opacity: 1;
         }
 
-        .temperature {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+        .container {
+            margin-top: clamp(2rem, 4vw, 3rem);
             padding: clamp(1rem, 2vw, 2rem);
             backdrop-filter: blur(10px);
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             width: clamp(280px, 90%, 500px);
             margin-inline: auto;
+        }
+
+        .temperature {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
         }
 
         .currentLoc {
@@ -130,6 +134,57 @@
             font-size: clamp(1rem, 1.5vw, 1.2rem);
             gap: clamp(1.2rem, 2.5vw, 2rem);
             opacity: 0.8;
+        }
+
+        .forecast {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 1rem;
+            overflow-x: auto;
+            padding: 0.5rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+        }
+
+        .forecast-list {
+            display: flex;
+            gap: clamp(1rem, 2vw, 1.5rem);
+            padding: 0;
+            min-width: min-content;
+            list-style: none;
+        }
+
+        .day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            opacity: 0.8;
+            min-width: 80px;
+        }
+
+        .day i {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+        }
+
+        .day span {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+        }
+
+        /* Scrollbar styles */
+        .forecast::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .forecast::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .forecast::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
         }
 
         /* Mobile devices */
@@ -197,7 +252,7 @@
         <input type="text" id="search" placeholder="Search for a city">
         <i class="fas fa-search"></i>
     </div>
-    <section class="temperature">
+    <section class="container temperature">
         <h5 class="currentLoc">
             <i class="fas fa-map-marker-alt"></i>
             <span id="location-label">Current Location</span>
@@ -211,6 +266,39 @@
         <div class="min-max">
             <span id="min-temp">Min: 3ºC</span>
             <span id="max-temp">Max: 7ºC</span>
+        </div>
+    </section>
+
+    <section class="container future">
+        <h3>Next 5 days</h3>
+        <div class="forecast">
+            <ul class="forecast-list">
+                <li class="day">
+                    <h4>Monday</h4>
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>5ºC</span>
+                </li>
+                <li class="day">
+                    <h4>Tuesday</h4>
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>6ºC</span>
+                </li>
+                <li class="day">
+                    <h4>Wednesday</h4>
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>7ºC</span>
+                </li>
+                <li class="day">
+                    <h4>Thursday</h4>
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>8ºC</span>
+                </li>
+                <li class="day">
+                    <h4>Friday</h4>
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>9ºC</span>
+                </li>
+            </ul>
         </div>
     </section>
 </body>
