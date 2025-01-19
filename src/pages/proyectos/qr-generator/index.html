@@ -312,6 +312,42 @@
                 padding: 1.5rem;
             }
         }
+
+        .notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff5757;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: top 0.3s ease;
+            z-index: 1000;
+            font-family: var(--font-family);
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .notification.show {
+            top: 20px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(-50%); }
+            25% { transform: translateX(-53%); }
+            75% { transform: translateX(-47%); }
+        }
+
+        @media (max-width: 480px) {
+            .notification {
+                width: 90%;
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+            }
+        }
     </style>
 
     <h1>QR Generator</h1>
@@ -321,6 +357,8 @@
     <div class="qr-section">
         <div id="qrcode"></div>
     </div>
+
+    <div class="notification" id="notification">Por favor, ingresa una URL</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
@@ -332,25 +370,40 @@
         // Limpiar input al cargar la página
         url.value = '';
 
-        function createQRCode() {
-            if (!url.value) return;
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
             
-            qrCodeContainer.innerHTML = '';
-            const size = Math.min(window.innerWidth * 0.8, 450);
-            
-            new QRCode(qrCodeContainer, {
-                text: url.value,
-                width: size,
-                height: size,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
 
-            qrSection.classList.add('active');
+        function createQRCode() {
+            if (!url.value.trim()) {
+                showNotification('Por favor, ingresa una URL');
+                return;
+            }
             
-            // Limpiar input después de generar el QR
-            url.value = '';
+            try {
+                qrCodeContainer.innerHTML = '';
+                const size = Math.min(window.innerWidth * 0.8, 450);
+                
+                new QRCode(qrCodeContainer, {
+                    text: url.value,
+                    width: size,
+                    height: size,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                qrSection.classList.add('active');
+                url.value = '';
+            } catch (error) {
+                showNotification('Error al generar el código QR');
+            }
         }
 
         generate.addEventListener('click', createQRCode);
