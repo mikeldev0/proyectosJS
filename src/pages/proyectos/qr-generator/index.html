@@ -396,6 +396,37 @@
                 padding: 0.8rem 1rem;
             }
         }
+
+        /* Estilos para el botón de descarga */
+        .download-button {
+            padding: clamp(0.6rem, 2vw, 1rem) clamp(1.2rem, 2.5vw, 2rem);
+            border: none;
+            border-radius: clamp(0.5rem, 1vw, 1rem);
+            font-size: clamp(1rem, 1.5vw, 1.1rem);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            letter-spacing: 0.5px;
+            font-family: var(--font-family);
+            margin-top: 1rem;
+        }
+
+        @media (hover: hover) {
+            .download-button:hover {
+                background: linear-gradient(135deg, var(--button-hover-color-start) 0%, var(--button-hover-color-end) 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .download-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
     </style>
 
     <h1>QR Generator</h1>
@@ -404,6 +435,7 @@
 
     <div class="qr-section">
         <div id="qrcode"></div>
+        <button class="download-button" id="download">Descargar QR</button>
     </div>
 
     <small class="credits">
@@ -462,6 +494,23 @@
         url.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') createQRCode();
         });
+
+        function downloadQRCode() {
+            const qrImage = qrCodeContainer.querySelector('img');
+            if (!qrImage) {
+                showNotification('No hay ningún QR para descargar');
+                return;
+            }
+
+            const link = document.createElement('a');
+            link.href = qrImage.src;
+            link.download = 'qrcode.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById('download').addEventListener('click', downloadQRCode);
     </script>
 </body>
 </html>
