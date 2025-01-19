@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Weather App | Real-time Weather Forecast" />
+    <meta property="og:description" content="Check the latest weather updates in your city." />
+    <meta property="og:image" content="weather_app_preview.webp" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://proyectosjs.mikeldev.com/proyectos/weather-app" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Weather App | Real-time Weather Forecast" />
+    <meta name="twitter:description" content="Check the latest weather updates in your city." />
+    <meta name="twitter:image" content="weather_app_preview.webp" />
     <title>Weather App | Real-time Weather Forecast - Mikel Echeverria</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="weather-app.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="weather-app.svg">
 </head>
 <body>
     <style>
@@ -25,6 +36,11 @@
             background: url('/proyectos/weather-bg.webp') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
+            background-color: rgba(0, 0, 0, 0.2);
+            background-blend-mode: darken;
+            display: flex;
+            flex-direction: column;
+
         }
 
         h1 {
@@ -39,7 +55,7 @@
         .search-container {
             position: relative;
             width: clamp(250px, 90%, 400px);
-            margin: clamp(1.5rem, 3vw, 2.5rem) auto;
+            margin: clamp(1rem, 2vw, 1.5rem) auto;
         }
 
         input {
@@ -83,13 +99,13 @@
         }
 
         .container {
-            margin-top: clamp(2rem, 4vw, 3rem);
             padding: clamp(1rem, 2vw, 2rem);
             backdrop-filter: blur(10px);
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             width: clamp(280px, 90%, 500px);
             margin-inline: auto;
+            margin-bottom: clamp(1.5rem, 2.5vw, 2rem);
         }
 
         .temperature {
@@ -396,6 +412,20 @@
         .forecast-list {
             gap: clamp(0.8rem, 1.5vw, 1rem);
         }
+
+        footer {
+            margin-top: auto;
+            padding: 1rem;
+            text-align: center;
+            font-size: clamp(0.8rem, 1.2vw, 1rem);
+            opacity: 0.7;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+        }
     </style>
     <a href="./weather-app">
         <h1>Weather</h1>
@@ -443,6 +473,12 @@
             </ul>
         </div>
     </section>
+
+    <footer>
+        <div class="container">
+            &copy; 2025 <a href="https://www.mikeldev.com" target="_blank">Mikel Echeverria</a> | Powered by <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI.com</a>
+        </div>
+    </footer>
 
     <script defer type="module">
         const API_KEY = '3df8a0705f2d4f9ea0b185511251801';
