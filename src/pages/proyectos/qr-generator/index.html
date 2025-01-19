@@ -171,6 +171,54 @@
             display: block;
         }
 
+        .credits {
+            font-size: 0.9rem;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 1rem;
+            font-family: var(--font-family);
+        }
+
+        a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            transition: all var(--transition-speed) ease;
+            padding: 0.2em 0.1em;
+            border-radius: 3px;
+            font-family: var(--font-family);
+        }
+
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            transition: width var(--transition-speed) ease;
+            border-radius: 2px;
+        }
+
+        @media (hover: hover) {
+            a:hover {
+            color: var(--secondary-color);
+            text-shadow: 0 0 8px rgba(80, 227, 194, 0.5);
+            }
+            
+            a:hover::after {
+            width: 100%;
+            }
+        }
+
+        a:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--secondary-color);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         @media (max-width: 480px) {
             body {
                 gap: 0.5rem;
@@ -357,6 +405,10 @@
     <div class="qr-section">
         <div id="qrcode"></div>
     </div>
+
+    <small class="credits">
+        Made with ❤️ by <a href="https://mikeldev.com" target="_blank" rel="noopener">Mikel Echeverría</a>
+    </small>
 
     <div class="notification" id="notification">Por favor, ingresa una URL</div>
 
