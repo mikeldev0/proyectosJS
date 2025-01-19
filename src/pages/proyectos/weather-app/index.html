@@ -477,6 +477,16 @@
         </div>
     </section>
 
+    <!-- Mover la sección de pronóstico horario encima de la sección de pronóstico de días -->
+    <section class="container hourly-forecast">
+        <h3>Next 12 Hours</h3>
+        <div class="forecast">
+            <ul class="forecast-list hourly-list">
+                <!-- ...existing code... -->
+            </ul>
+        </div>
+    </section>
+
     <section class="container future">
         <div class="alerts"> <!-- Corregido de .aletrs a .alerts -->
             <p class="alert" id="alert"></p>
@@ -529,7 +539,7 @@
         const wind = document.getElementById('wind');
         const alertContainer = document.querySelector('.alerts'); // Corregido de .aletrs a .alerts
 
-        const updateWeatherUI = (currentData, cityName, alerts) => {
+        const updateWeatherUI = (currentData, cityName, alerts, hourlyData) => {
             city.textContent = cityName; // Display city name
             
             currentTemp.textContent = `${Math.round(currentData.temp_c)}ºC`;
@@ -549,6 +559,8 @@
             } else {
                 alertContainer.classList.remove('active'); // Ocultar el contenedor de alertas
             }
+
+            updateHourlyForecastUI(hourlyData);
         };
 
         const getWeatherIcon = (conditionText) => {
@@ -582,16 +594,35 @@
             }
         };
 
+        // Añadir un caché para almacenar los datos meteorológicos por ciudad
+        const weatherCache = new Map();
+
         const getWeather = async (city) => {
+            if (weatherCache.has(city.toLowerCase())) {
+                const cachedData = weatherCache.get(city.toLowerCase());
+                updateWeatherUI(cachedData.current, cachedData.name, cachedData.alerts?.alert, cachedData.hourlyData);
+                updateForecastUI(cachedData.forecastData); // Añadir actualización de forecast
+                return;
+            }
             try {
                 const { lat, lon, name } = await getCoordinates(city);
                 const response = await fetch(
-                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes` // Asegurar alerts=yes
+                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes&lang=en`
                 );
                 if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
                 if (!response.ok) throw new Error('Weather data not available');
                 const data = await response.json();
-                updateWeatherUI(data.current, name, data.alerts?.alert);
+                const hourlyData = data.forecast.forecastday.flatMap(day => day.hour);
+                updateWeatherUI(data.current, name, data.alerts?.alert, hourlyData);
+                updateForecastUI(data.forecast.forecastday); // Añadir actualización de forecast
+                // Almacenar los datos en el caché
+                weatherCache.set(city.toLowerCase(), {
+                    current: data.current,
+                    name: name,
+                    alerts: data.alerts?.alert,
+                    hourlyData: hourlyData,
+                    forecastData: data.forecast.forecastday
+                });
                 search.value = ''; // Reset search field
             } catch (error) {
                 console.error('Error getting weather:', error);
@@ -600,15 +631,31 @@
         };
 
         const getWeatherByCoords = async (lat, lon) => {
+            const cacheKey = `${lat},${lon}`;
+            if (weatherCache.has(cacheKey)) {
+                const cachedData = weatherCache.get(cacheKey);
+                updateWeatherUI(cachedData.current, cachedData.name, cachedData.alerts?.alert, cachedData.hourlyData);
+                updateForecastUI(cachedData.forecastData);
+                return cachedData;
+            }
             try {
                 const response = await fetch(
-                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes` // Cambiado alerts=no a alerts=yes
+                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes&lang=en`
                 );
                 if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
                 if (!response.ok) throw new Error('Weather data not available');
                 const data = await response.json();
-                updateWeatherUI(data.current, data.location.name, data.alerts?.alert); // Pasar alerts
+                const hourlyData = data.forecast.forecastday.flatMap(day => day.hour);
+                updateWeatherUI(data.current, data.location.name, data.alerts?.alert, hourlyData);
                 updateForecastUI(data.forecast.forecastday);
+                // Almacenar los datos en el caché
+                weatherCache.set(cacheKey, {
+                    current: data.current,
+                    name: data.location.name,
+                    alerts: data.alerts?.alert,
+                    hourlyData: hourlyData,
+                    forecastData: data.forecast.forecastday
+                });
                 return data;
             } catch (error) {
                 console.error('Error getting weather:', error);
@@ -616,8 +663,12 @@
             }
         };
 
+        // Cambiar la selección de forecastList a dailyForecastList
+        const dailyForecastList = document.querySelector('.future .forecast-list');
+        const hourlyForecastList = document.querySelector('.hourly-forecast .hourly-list');
+
         const updateForecastUI = (forecastData) => {
-            forecastList.innerHTML = '';
+            dailyForecastList.innerHTML = '';
             forecastData.slice(0, 3).forEach(day => { // Get next 3 days
                 const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date(day.date));
                 const iconClass = getWeatherIcon(day.day.condition.text);
@@ -629,7 +680,25 @@
                     <i class="${iconClass}"></i>
                     <span>${Math.round(day.day.avgtemp_c)}ºC</span>
                 `;
-                forecastList.appendChild(li);
+                dailyForecastList.appendChild(li);
+            });
+        };
+
+        // Asegurarse de que updateHourlyForecastUI usa hourlyForecastList
+        const updateHourlyForecastUI = (hourlyData) => {
+            hourlyForecastList.innerHTML = '';
+            hourlyData.slice(0, 12).forEach(hour => { // Mostrar las próximas 12 horas
+                const time = new Date(hour.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const iconClass = getWeatherIcon(hour.condition.text);
+
+                const li = document.createElement('li');
+                li.classList.add('hour');
+                li.innerHTML = `
+                    <h4>${time}</h4>
+                    <i class="${iconClass}"></i>
+                    <span>${Math.round(hour.temp_c)}ºC</span>
+                `;
+                hourlyForecastList.appendChild(li);
             });
         };
 
