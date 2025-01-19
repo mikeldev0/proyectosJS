@@ -426,6 +426,32 @@
             text-decoration: none;
             font-weight: 500;
         }
+
+        hr {
+            margin: 1rem auto;
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .alert {
+            /* Eliminar o ajustar display para evitar conflictos */
+            /* display: none; */ 
+            align-items: center;
+            gap: 0.5rem;
+            font-size: clamp(0.9rem, 1.2vw, 1rem);
+        }
+
+        .alert.active {
+            display: block; /* Mostrar cuando hay alertas */
+        }
+
+        .alerts { /* Corregido de .aletrs a .alerts */
+            display: none; /* Oculta el contenedor de alertas por defecto */
+        }
+        
+        .alerts.active { /* Corregido de .aletrs.active a .alerts.active */
+            display: block; /* Muestra el contenedor de alertas cuando hay alertas */
+        }
     </style>
     <a href="./weather-app">
         <h1>Weather</h1>
@@ -452,6 +478,10 @@
     </section>
 
     <section class="container future">
+        <div class="alerts"> <!-- Corregido de .aletrs a .alerts -->
+            <p class="alert" id="alert"></p>
+            <hr>
+        </div>
         <h3>Next 3 days</h3>
         <div class="forecast">
             <ul class="forecast-list">
@@ -497,8 +527,9 @@
         const forecastList = document.querySelector('.forecast-list');
         const humidity = document.getElementById('humidity');
         const wind = document.getElementById('wind');
+        const alertContainer = document.querySelector('.alerts'); // Corregido de .aletrs a .alerts
 
-        const updateWeatherUI = (currentData, cityName) => {
+        const updateWeatherUI = (currentData, cityName, alerts) => {
             city.textContent = cityName; // Display city name
             
             currentTemp.textContent = `${Math.round(currentData.temp_c)}ºC`;
@@ -510,6 +541,14 @@
             wind.textContent = `${currentData.wind_kph}`; // Update wind
 
             actualLocation.style.display = 'flex'; // Show current location indicator
+
+            const alertElement = document.getElementById('alert');
+            if (alerts && alerts.length > 0) {
+                alertElement.textContent = alerts[0].headline; // Mostrar solo el texto de la alerta
+                alertContainer.classList.add('active'); // Mostrar el contenedor de alertas
+            } else {
+                alertContainer.classList.remove('active'); // Ocultar el contenedor de alertas
+            }
         };
 
         const getWeatherIcon = (conditionText) => {
@@ -547,13 +586,12 @@
             try {
                 const { lat, lon, name } = await getCoordinates(city);
                 const response = await fetch(
-                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5&aqi=no&alerts=no`
+                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5&aqi=no&alerts=yes` // Asegurar alerts=yes
                 );
                 if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
                 if (!response.ok) throw new Error('Weather data not available');
                 const data = await response.json();
-                updateWeatherUI(data.current, name);
-                updateForecastUI(data.forecast.forecastday);
+                updateWeatherUI(data.current, name, data.alerts?.alert);
                 search.value = ''; // Reset search field
             } catch (error) {
                 console.error('Error getting weather:', error);
@@ -564,12 +602,12 @@
         const getWeatherByCoords = async (lat, lon) => {
             try {
                 const response = await fetch(
-                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5&aqi=no&alerts=no`
+                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5&aqi=no&alerts=yes` // Cambiado alerts=no a alerts=yes
                 );
                 if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
                 if (!response.ok) throw new Error('Weather data not available');
                 const data = await response.json();
-                updateWeatherUI(data.current, data.location.name);
+                updateWeatherUI(data.current, data.location.name, data.alerts?.alert); // Pasar alerts
                 updateForecastUI(data.forecast.forecastday);
                 return data;
             } catch (error) {
