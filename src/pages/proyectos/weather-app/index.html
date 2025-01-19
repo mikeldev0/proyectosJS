@@ -586,7 +586,7 @@
             try {
                 const { lat, lon, name } = await getCoordinates(city);
                 const response = await fetch(
-                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5&aqi=no&alerts=yes` // Asegurar alerts=yes
+                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes` // Asegurar alerts=yes
                 );
                 if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
                 if (!response.ok) throw new Error('Weather data not available');
@@ -602,7 +602,7 @@
         const getWeatherByCoords = async (lat, lon) => {
             try {
                 const response = await fetch(
-                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=5&aqi=no&alerts=yes` // Cambiado alerts=no a alerts=yes
+                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes` // Cambiado alerts=no a alerts=yes
                 );
                 if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
                 if (!response.ok) throw new Error('Weather data not available');
