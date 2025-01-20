@@ -275,6 +275,60 @@
             .text-weather i, .min-max i, .day i {
                 font-size: clamp(1.2rem, 5vw, 2rem);
             }
+
+            h1 {
+                font-size: 1.8rem;
+                margin-top: 0.8rem;
+            }
+
+            h2 {
+                font-size: 2.2rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+
+            .container {
+                padding: 0.6rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .forecast-day-header {
+                font-size: 0.8rem;
+            }
+
+            .forecast-day-details {
+                grid-template-columns: repeat(4, 1fr);
+                font-size: 0.75rem;
+                gap: 0.2rem;
+            }
+
+            .forecast-detail {
+                justify-content: center;
+            }
+
+            .forecast-detail span {
+                font-size: 0.75rem;
+            }
+
+            .forecast-day hr {
+                margin: 0.3rem 0;
+            }
+
+            .currentLoc {
+                font-size: 0.8rem;
+            }
+
+            .min-max {
+                font-size: 0.9rem;
+                gap: 0.8rem;
+            }
+
+            .text-weather {
+                font-size: 0.9rem;
+                gap: 0.4rem;
+            }
         }
 
         /* Tablets */
@@ -468,6 +522,295 @@
             background-color: rgba(64, 64, 64, 0.7);
             background-blend-mode: darken;
         }
+
+        .forecast-day {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 1rem 0;
+        }
+
+        .forecast-day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .forecast-day-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .forecast-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .forecast-day hr {
+            margin: 1rem 0;
+        }
+
+        .forecast-day:last-child hr {
+            display: none;
+        }
+
+        .max-temp {
+            color: #ff7676;
+        }
+
+        .min-temp {
+            color: #76a5ff;
+        }
+
+        /* Actualizar estilos para forecast-day */
+        .forecast-day {
+            padding: 0.5rem 0;
+        }
+
+        .forecast-day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .forecast-day-header h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .forecast-day-header span {
+            opacity: 0.8;
+            font-size: 0.8rem;
+        }
+
+        .forecast-day-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .forecast-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .forecast-detail i {
+            font-size: 0.9rem;
+            width: 1rem;
+            text-align: center;
+        }
+
+        .forecast-day hr {
+            margin: 0.5rem 0;
+        }
+
+        /* Eliminar colores específicos de temperatura */
+        .max-temp, .min-temp {
+            color: inherit;
+        }
+
+        /* Ajustes responsive */
+        @media (max-width: 480px) {
+            .forecast-day-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+
+            .forecast-day-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .container {
+                padding: 0.8rem;
+            }
+
+            .forecast-detail {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Hacer los contenedores más compactos */
+        .container {
+            margin-bottom: 0.8rem;
+        }
+
+        h3 {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            margin-bottom: 0.5rem;
+        }
+
+        .text-weather {
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+        }
+
+        /* Ajustes generales para el forecast-day */
+        .forecast-day {
+            padding: 0.3rem 0;
+        }
+
+        .forecast-day-header {
+            align-items: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .forecast-day-header h4 {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .today-marker {
+            font-size: 0.7rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            margin-left: 0.4rem;
+            letter-spacing: 0.5px;
+        }
+
+        .today-label {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            margin-left: 0.4rem;
+        }
+
+        /* Mobile devices - Versión más compacta */
+        @media (max-width: 480px) {
+            /* Ajustes generales */
+            .container {
+                padding: 0.5rem;
+                margin-bottom: 0.4rem;
+            }
+
+            /* Header y búsqueda */
+            h1 {
+                font-size: 1.5rem;
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .search-container {
+                margin: 0.5rem auto;
+            }
+
+            input {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+
+            /* Temperatura actual */
+            .temperature {
+                margin-top: 0.5rem;
+                padding: 0.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+                margin: 0.2rem 0;
+            }
+
+            h3 {
+                font-size: 1rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .currentLoc {
+                font-size: 0.75rem;
+            }
+
+            .text-weather {
+                font-size: 0.85rem;
+                gap: 0.3rem;
+                flex-direction: row;
+            }
+
+            .min-max {
+                font-size: 0.8rem;
+                gap: 0.6rem;
+                flex-direction: row;
+                margin-top: 0.3rem;
+            }
+
+            /* Pronóstico horario */
+            .forecast {
+                margin-top: 0.4rem;
+                padding: 0.3rem 0;
+            }
+
+            .hour {
+                min-width: 60px;
+                font-size: 0.8rem;
+            }
+
+            .hour h4 {
+                font-size: 0.75rem;
+            }
+
+            /* Pronóstico diario */
+            .forecast-day {
+                padding: 0.3rem 0;
+            }
+
+            .forecast-day-header {
+                margin-bottom: 0.3rem;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.75rem;
+            }
+
+            .forecast-day-header h4 {
+                font-size: 0.85rem;
+            }
+
+            .forecast-day-header span {
+                font-size: 0.75rem;
+            }
+
+            .forecast-day-details {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 0.3rem;
+                margin-top: 0.2rem;
+            }
+
+            .forecast-detail {
+                font-size: 0.75rem;
+            }
+
+            .forecast-detail i {
+                font-size: 0.8rem;
+            }
+
+            .forecast-day hr {
+                margin: 0.3rem 0;
+            }
+
+            /* Iconos más pequeños en móvil */
+            .text-weather i, .min-max i, .forecast-detail i {
+                font-size: 1rem;
+            }
+
+            /* Footer más compacto */
+            footer {
+                padding: 0.5rem;
+                font-size: 0.75rem;
+            }
+        }
     </style>
     <a href="./weather-app">
         <h1>Weather</h1>
@@ -508,25 +851,9 @@
     </section>
 
     <section class="container future">
-        <h3>Next 3 days</h3>
-        <div class="forecast">
-            <ul class="forecast-list">
-                <li class="day">
-                    <h4>Monday</h4>
-                    <i class="fas fa-cloud-sun"></i>
-                    <span>5ºC</span>
-                </li>
-                <li class="day">
-                    <h4>Tuesday</h4>
-                    <i class="fas fa-cloud-sun"></i>
-                    <span>6ºC</span>
-                </li>
-                <li class="day">
-                    <h4>Wednesday</h4>
-                    <i class="fas fa-cloud-sun"></i>
-                    <span>7ºC</span>
-                </li>
-            </ul>
+        <h3>Forecast</h3>
+        <div class="forecast-days">
+            <!-- El contenido se generará dinámicamente -->
         </div>
     </section>
 
@@ -727,19 +1054,57 @@
         const hourlyForecastList = document.querySelector('.hourly-forecast .hourly-list');
 
         const updateForecastUI = (forecastData) => {
-            dailyForecastList.innerHTML = '';
-            forecastData.slice(0, 3).forEach(day => { // Get next 3 days
-                const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date(day.date));
-                const iconClass = getWeatherIcon(day.day.condition.text);
+            const forecastContainer = document.querySelector('.forecast-days');
+            forecastContainer.innerHTML = '';
 
-                const li = document.createElement('li');
-                li.classList.add('day');
-                li.innerHTML = `
-                    <h4>${capitalizeFirstLetter(dayName)}</h4>
-                    <i class="${iconClass}"></i>
-                    <span>${Math.round(day.day.avgtemp_c)}ºC</span>
+            // Usar solo los próximos días, sin incluir el actual nuevamente
+            forecastData.slice(0, 3).forEach((day, index) => {
+                const date = new Date(day.date);
+                const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
+                const formattedDate = new Intl.DateTimeFormat('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                }).format(date);
+
+                const forecastDay = document.createElement('div');
+                forecastDay.className = `forecast-day${index === 0 ? ' today' : ''}`;
+                
+                forecastDay.innerHTML = `
+                    <div class="forecast-day-header">
+                        <div>
+                            <h4>
+                                ${index === 0 ? 'Today' : capitalizeFirstLetter(dayName)}
+                                ${index === 0 ? '<span class="today-marker">Current</span>' : ''}
+                            </h4>
+                            <span>${formattedDate}</span>
+                        </div>
+                        <div class="text-weather">
+                            <i class="${getWeatherIcon(day.day.condition.text)}"></i>
+                            <span>${day.day.condition.text}</span>
+                        </div>
+                    </div>
+                    <div class="forecast-day-details">
+                        <div class="forecast-detail">
+                            <i class="fas fa-temperature-high"></i>
+                            <span>${Math.round(day.day.maxtemp_c)}°</span>
+                        </div>
+                        <div class="forecast-detail">
+                            <i class="fas fa-temperature-low"></i>
+                            <span>${Math.round(day.day.mintemp_c)}°</span>
+                        </div>
+                        <div class="forecast-detail">
+                            <i class="fas fa-tint"></i>
+                            <span>${day.day.avghumidity}%</span>
+                        </div>
+                        <div class="forecast-detail">
+                            <i class="fas fa-wind"></i>
+                            <span>${Math.round(day.day.maxwind_kph)}</span>
+                        </div>
+                    </div>
+                    ${index < 3 ? '<hr>' : ''}
                 `;
-                dailyForecastList.appendChild(li);
+                
+                forecastContainer.appendChild(forecastDay);
             });
         };
 
@@ -747,7 +1112,11 @@
         const updateHourlyForecastUI = (hourlyData) => {
             hourlyForecastList.innerHTML = '';
             hourlyData.slice(0, 12).forEach(hour => { // Mostrar las próximas 12 horas
-                const time = new Date(hour.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                const time = new Date(hour.time).toLocaleTimeString([], { 
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false // Usar formato 24h para ahorrar espacio
+                });
                 const iconClass = getWeatherIcon(hour.condition.text);
 
                 const li = document.createElement('li');
@@ -755,7 +1124,7 @@
                 li.innerHTML = `
                     <h4>${time}</h4>
                     <i class="${iconClass}"></i>
-                    <span>${Math.round(hour.temp_c)}ºC</span>
+                    <span>${Math.round(hour.temp_c)}°</span>
                 `;
                 hourlyForecastList.appendChild(li);
             });
