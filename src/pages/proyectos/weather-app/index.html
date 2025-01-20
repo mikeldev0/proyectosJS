@@ -17,9 +17,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="icon" href="weather-app.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="weather-app.svg">
-</head>
-<body>
     <style>
+        /* Base styles */
+        :root {
+            --primary-bg: rgba(255, 255, 255, 0.1);
+            --primary-color: #fff;
+            --border-radius: 20px;
+            --transition: 0.3s ease;
+        }
+
+        /* Core styles */
         * {
             margin: 0;
             padding: 0;
@@ -40,7 +47,6 @@
             background-blend-mode: darken;
             display: flex;
             flex-direction: column;
-
         }
 
         h1 {
@@ -85,12 +91,13 @@
 
         .search-container i {
             position: absolute;
-            right: 1.2rem;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
             color: #fff;
             opacity: 0.8;
             cursor: pointer;
+            padding: 8px;
             transition: opacity 0.3s ease;
         }
 
@@ -898,418 +905,512 @@
             font-size: 0.8rem;
             }
         }
+
+        /* Components */
+        .container {
+            background-color: var(--primary-bg);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin: 1rem auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 1rem auto;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .weather-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            text-align: center;
+            padding: 1.5rem;
+            background-color: var(--primary-bg);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .forecast-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: var(--primary-bg);
+            border-radius: var(--border-radius);
+        }
+        /* Utilities */
+        .hidden { display: none; }
+        .flex-center { display: flex; align-items: center; }
+        .text-overflow { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* 1. Mejorar los estilos de las próximas horas */
+        .hourly-forecast .forecast {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 0.5rem;  /* Reduced margin */
+            overflow-x: auto;
+            padding: 0.3rem 0;  /* Reduced padding */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+            gap: 0.5rem;  /* Reduced gap */
+        }
+
+        .hourly-forecast .forecast-list {
+            display: flex;
+            gap: 0.8rem;  /* Reduced gap */
+            padding: 0.3rem;  /* Reduced padding */
+            min-width: max-content;
+            list-style: none;
+        }
+
+        .hour {
+            flex: 0 0 auto;
+            width: 45px; /* Reducir el ancho */
+            text-align: center;
+            padding: 0.2rem; /* Reducir el padding */
+            border-radius: 8px;  /* Reduced border radius */
+            transition: transform 0.2s;
+            font-size: 0.8rem; /* Reducir el tamaño de fuente */
+        }
+
+        .hour:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .hour span {
+            display: block;
+            font-size: 0.7rem; /* Reducir tamaño de fuente */
+            margin-bottom: 0.3rem;  /* Reduced margin */
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hour i {
+            font-size: 0.9rem; /* Reducir tamaño del icono */
+            margin: 0.3rem 0;  /* Reduced margin */
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hour .temp {
+            font-weight: 500;
+            font-size: 0.8rem; /* Reducir tamaño de fuente de la temperatura */
+        }
+
+        /* Ajustes responsive */
+        @media (max-width: 480px) {
+            .hour {
+            width: 45px;  /* Even smaller on mobile */
+            padding: 0.2rem;
+            }
+
+            .hour span {
+            font-size: 0.7rem;
+            }
+
+            .hour i {
+            font-size: 0.9rem;
+            }
+        }
+
+        /* 2. Mostrar el mensaje de alerta */
+        .alerts {
+            display: none; /* ...existing code... */
+            /* Añadir estilos para la posición */
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 0, 0, 0.8);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .alerts.active {
+            display: block; /* ...existing code... */
+        }
+
+        /* 3. Recuperar la barra de progreso de la lluvia */
+        .forecast-detail.with-progress {
+            flex-direction: row;
+            width: 100%;
+            gap: 4px;
+        }
+
+        .forecast-detail.with-progress span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .humidity-bar {
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin-top: 2px;
+            overflow: hidden;
+        }
+
+        .humidity-progress {
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transition: width 0.3s ease;
+            max-width: 100%;
+        }
+
+        /* Ajustes responsive para mostrar más horas en dispositivos grandes */
+        @media (min-width: 769px) {
+            .hour {
+                width: 80px; /* Aumentar el ancho en pantallas grandes */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hour {
+                width: 50px; /* Ajustar el ancho en móviles */
+            }
+        }
+
+        .forecast-day-header h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .forecast-day-header span {
+            font-size: 1rem;
+            color: #ddd;
+        }
+
+        /* 2. Mejorar la barra de progreso de lluvia */
+        .humidity-bar {
+            background-color: rgba(255, 255, 255, 0.2);
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        .humidity-progress {
+            background-color: rgba(255, 255, 255, 0.7);
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* 3. Optimizar la disposición de detalles */
+        .forecast-day-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .forecast-detail {
+            flex: 1 1 45%;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 4. Asegurar responsividad */
+        @media (min-width: 769px) {
+            .forecast-day {
+                margin-bottom: 1.5rem;
+            }
+        }
     </style>
-    <a href="./weather-app">
-        <h1>Weather</h1>
-    </a>
-    <div class="search-container">
-        <input type="text" id="search" placeholder="Search for a city">
-        <i class="fas fa-search"></i>
-    </div>
-    <section class="container temperature">
-        <h5 class="currentLoc">
-            <i class="fas fa-map-marker-alt"></i>
-            <span id="location-label">Current Location</span>
-        </h5>
-        <h3 id="city">San Francisco</h3>
-        <h2 id="current-temp">5ºC</h2>
-        <div class="text-weather">
-            <i id="weather-icon" class="fas fa-cloud-sun"></i>
-            <span id="weather-description">Cloudy</span>
-        </div>
-        <div class="min-max">
-            <p>Humidity: <span id="humidity">74</span>% <i class="fas fa-tint"></i></p>
-            <p>Wind: <span id="wind">38.9</span> kph <i class="fas fa-wind"></i></p>
-        </div>
-    </section>
+</head>
+<body>
+    <main class="app-container">
+        <!-- Estructura simplificada y semántica -->
+        <header class="app-header">
+            <h1>Weather</h1>
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Search for a city">
+                <button class="search-btn" aria-label="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </header>
 
-    <!-- Mover la sección de pronóstico horario encima de la sección de pronóstico de días -->
-    <section class="container hourly-forecast">
-        <div class="alerts">
-            <p class="alert" id="alert"></p>
-            <hr>
-        </div>
-        <h3>Next 12 Hours</h3>
-        <div class="forecast">
-            <ul class="forecast-list hourly-list">
-                <!-- ...existing code... -->
-            </ul>
-        </div>
-    </section>
+        <!-- Contenido principal -->
+        <section class="container temperature">
+            <h5 class="currentLoc">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="location-label">Current Location</span>
+            </h5>
+            <h3 id="city">San Francisco</h3>
+            <h2 id="current-temp">5ºC</h2>
+            <div class="text-weather">
+                <i id="weather-icon" class="fas fa-cloud-sun"></i>
+                <span id="weather-description">Cloudy</span>
+            </div>
+            <div class="min-max">
+                <p>Humidity: <span id="humidity">74</span>% <i class="fas fa-tint"></i></p>
+                <p>Wind: <span id="wind">38.9</span> kph <i class="fas fa-wind"></i></p>
+            </div>
+        </section>
 
-    <section class="container future">
-        <h3>Forecast</h3>
-        <div class="forecast-days">
-            <!-- El contenido se generará dinámicamente -->
-        </div>
-    </section>
+        <!-- Mover la sección de pronóstico horario encima de la sección de pronóstico de días -->
+        <section class="container hourly-forecast">
+            <div class="alerts">
+                <p class="alert" id="alert"></p>
+                <hr>
+            </div>
+            <h3>Next 12 Hours</h3>
+            <div class="forecast">
+                <ul class="forecast-list hourly-list">
+                    <!-- ...existing code... -->
+                </ul>
+            </div>
+        </section>
 
-    <footer>
-        <div class="container">
-            &copy; 2025 <a href="https://www.mikeldev.com" target="_blank">Mikel Echeverria</a> | Powered by <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI.com</a>
-        </div>
-    </footer>
+        <section class="container future">
+            <h3>Forecast</h3>
+            <div class="forecast-days">
+                <!-- El contenido se generará dinámicamente -->
+            </div>
+        </section>
 
-    <!-- Agregar contenedor para notificaciones -->
-    <div id="notification" class="notification"></div>
+        <footer>
+            <div class="container">
+                &copy; 2025 <a href="https://www.mikeldev.com" target="_blank">Mikel Echeverria</a> | Powered by <a href="https://www.weatherapi.com/" target="_blank">WeatherAPI.com</a>
+            </div>
+        </footer>
 
-    <script defer type="module">
-        // Añadir la declaración de weatherCache al inicio del script
-        const weatherCache = new Map();
+        <!-- Agregar contenedor para notificaciones -->
+        <div id="notification" class="notification"></div>
+    </main>
 
-        const API_KEY = '3df8a0705f2d4f9ea0b185511251801';
-        const BASE_URL = 'https://api.weatherapi.com/v1';
-        const GEOCODING_URL = 'https://api.weatherapi.com/v1/search.json';
-
-        const search = document.getElementById('search');
-        const searchIcon = document.querySelector('.search-container i');
-        const actualLocation = document.querySelector('.currentLoc'); // Cambiado a querySelector
-        const city = document.getElementById('city');
-        const currentTemp = document.getElementById('current-temp');
-        const weatherIcon = document.getElementById('weather-icon');
-        const weatherDescription = document.getElementById('weather-description');
-        const minTemp = document.getElementById('min-temp');
-        const maxTemp = document.getElementById('max-temp');
-        const forecastList = document.querySelector('.forecast-list');
-        const humidity = document.getElementById('humidity');
-        const wind = document.getElementById('wind');
-        const alertContainer = document.querySelector('.alerts'); // Corregido de .aletrs a .alerts
-
-        // Definir la función getWeatherIcon
-        const WEATHER_ICONS = {
-            sunny: 'fas fa-sun',
-            clear: 'fas fa-sun',
-            'partly cloudy': 'fas fa-cloud-sun',
-            cloudy: 'fas fa-cloud',
-            overcast: 'fas fa-cloud',
-            mist: 'fas fa-smog',
-            fog: 'fas fa-smog',
-            'freezing fog': 'fas fa-smog',
-            'light rain': 'fas fa-cloud-rain',
-            'patchy rain possible': 'fas fa-cloud-rain',
-            'light drizzle': 'fas fa-cloud-rain',
-            'moderate rain': 'fas fa-cloud-showers-heavy',
-            rain: 'fas fa-cloud-showers-heavy',
-            'heavy rain': 'fas fa-cloud-showers-heavy',
-            'light snow': 'fas fa-snowflake',
-            'patchy snow possible': 'fas fa-snowflake',
-            snow: 'fas fa-snowflake',
-            'heavy snow': 'fas fa-snowflake',
-            sleet: 'fas fa-cloud-meatball',
-            'light sleet': 'fas fa-cloud-meatball',
-            'moderate or heavy sleet': 'fas fa-cloud-meatball',
-            'thundery outbreaks possible': 'fas fa-bolt',
-            'patchy light rain with thunder': 'fas fa-bolt',
-            'moderate or heavy rain with thunder': 'fas fa-bolt',
-            thunderstorm: 'fas fa-bolt',
-            'blowing snow': 'fas fa-wind',
-            blizzard: 'fas fa-wind',
-            'ice pellets': 'fas fa-icicles'
+    <script>
+        // Config y constantes
+        const CONFIG = {
+            API_KEY: '3df8a0705f2d4f9ea0b185511251801',
+            BASE_URL: 'https://api.weatherapi.com/v1',
+            DEFAULT_CITY: 'Madrid',
+            CACHE_DURATION: 1800000 // 30 minutos
         };
 
-        const DEFAULT_ICON = 'fas fa-cloud';
-
-        const getWeatherIcon = (condition) => {
-            return WEATHER_ICONS[condition.toLowerCase()] || DEFAULT_ICON;
-        };
-
-        // Definir la función getCoordinates
-        const getCoordinates = async (city) => {
-            try {
-                const response = await fetch(`${GEOCODING_URL}?key=${API_KEY}&q=${encodeURIComponent(city)}`);
-                if (!response.ok) throw new Error('Error al obtener las coordenadas.');
-                const data = await response.json();
-                if (data.length === 0) throw new Error('No se encontraron coordenadas para la ciudad proporcionada.');
-                const { lat, lon, name } = data[0];
-                return { lat, lon, name };
-            } catch (error) {
-                console.error('Error obteniendo coordenadas:', error);
-                throw error;
-            }
-        };
-
-        // Actualizar la función updateWeatherUI para aceptar un parámetro 'isCurrentLocation'
-        const updateWeatherUI = (currentData, cityName, alerts, hourlyData, isCurrentLocation) => {
-            city.textContent = cityName; // Display city name
-            
-            currentTemp.textContent = `${Math.round(currentData.temp_c)}ºC`;
-            const iconClass = getWeatherIcon(currentData.condition.text);
-            weatherIcon.className = iconClass;
-            weatherDescription.textContent = currentData.condition.text;
-            
-            humidity.textContent = currentData.humidity; // Update humidity
-            wind.textContent = `${currentData.wind_kph}`; // Update wind
-
-            if (isCurrentLocation) {
-                actualLocation.style.display = 'flex'; // Mostrar indicador de ubicación actual
-            } else {
-                actualLocation.style.display = 'none'; // Ocultar indicador de ubicación actual
-            }
-
-            const alertElement = document.getElementById('alert');
-            if (alerts && alerts.length > 0) {
-                alertElement.textContent = alerts[0].headline; // Mostrar solo el texto de la alerta
-                alertContainer.classList.add('active'); // Mostrar el contenedor de alertas
-            } else {
-                alertContainer.classList.remove('active'); // Ocultar el contenedor de alertas
-            }
-
-            updateHourlyForecastUI(hourlyData);
-
-            // Cambiar la clase del body según la condición del clima
-            const body = document.body;
-            body.classList.remove('snow', 'rain', 'storm'); // Eliminar clases anteriores
-
-            const condition = currentData.condition.text.toLowerCase();
-            if (condition.includes('snow')) {
-                body.classList.add('snow');
-            } else if (condition.includes('rain')) {
-                body.classList.add('rain');
-            } else if (condition.includes('storm') || condition.includes('thunder')) {
-                body.classList.add('storm');
-            }
-        };
-
-        const getWeather = async (city) => {
-            if (weatherCache.has(city.toLowerCase())) {
-                const cachedData = weatherCache.get(city.toLowerCase());
-                updateWeatherUI(cachedData.current, cachedData.name, cachedData.alerts?.alert, cachedData.hourlyData, false); // isCurrentLocation = false
-                updateForecastUI(cachedData.forecastData);
-                return;
-            }
-            try {
-                const { lat, lon, name } = await getCoordinates(city);
-                const response = await fetch(
-                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes&lang=en`
-                );
-                if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
-                if (!response.ok) throw new Error('Weather data not available');
-                const data = await response.json();
-                const hourlyData = data.forecast.forecastday.flatMap(day => day.hour);
-                updateWeatherUI(data.current, name, data.alerts?.alert, hourlyData, false); // isCurrentLocation = false
-                updateForecastUI(data.forecast.forecastday);
-                // Almacenar los datos en el caché
-                weatherCache.set(city.toLowerCase(), {
-                    current: data.current,
-                    name: name,
-                    alerts: data.alerts?.alert,
-                    hourlyData: hourlyData,
-                    forecastData: data.forecast.forecastday
+        // Cache manager
+        const CacheManager = {
+            cache: new Map(),
+            set(key, data) {
+                this.cache.set(key, {
+                    data,
+                    timestamp: Date.now()
                 });
-                search.value = ''; // Reset search field
-            } catch (error) {
-                console.error('Error getting weather:', error);
-                showNotification(error.message);
+            },
+            get(key) {
+                const cached = this.cache.get(key);
+                if (!cached) return null;
+                if (Date.now() - cached.timestamp > CONFIG.CACHE_DURATION) {
+                    this.cache.delete(key);
+                    return null;
+                }
+                return cached.data;
             }
         };
 
-        const getWeatherByCoords = async (lat, lon) => {
-            const cacheKey = `${lat},${lon}`;
-            if (weatherCache.has(cacheKey)) {
-                const cachedData = weatherCache.get(cacheKey);
-                updateWeatherUI(cachedData.current, cachedData.name, cachedData.alerts?.alert, cachedData.hourlyData, true); // isCurrentLocation = true
-                updateForecastUI(cachedData.forecastData);
-                return cachedData;
-            }
-            try {
-                const response = await fetch(
-                    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=3&aqi=no&alerts=yes&lang=en`
-                );
-                if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
-                if (!response.ok) throw new Error('Weather data not available');
+        // Weather Service
+        const WeatherService = {
+            async getCoordinates(city) {
+                const response = await fetch(`${CONFIG.BASE_URL}/search.json?key=${CONFIG.API_KEY}&q=${encodeURIComponent(city)}`);
+                if (!response.ok) throw new Error('Ciudad no encontrada');
                 const data = await response.json();
-                const hourlyData = data.forecast.forecastday.flatMap(day => day.hour);
-                updateWeatherUI(data.current, data.location.name, data.alerts?.alert, hourlyData, true); // isCurrentLocation = true
-                updateForecastUI(data.forecast.forecastday);
-                // Almacenar los datos en el caché
-                weatherCache.set(cacheKey, {
-                    current: data.current,
-                    name: data.location.name,
-                    alerts: data.alerts?.alert,
-                    hourlyData: hourlyData,
-                    forecastData: data.forecast.forecastday
-                });
-                return data;
-            } catch (error) {
-                console.error('Error getting weather:', error);
-                showNotification(error.message);
+                return data[0];
+            },
+
+            async getWeatherData(lat, lon) {
+                const response = await fetch(
+                    `${CONFIG.BASE_URL}/forecast.json?key=${CONFIG.API_KEY}&q=${lat},${lon}&days=4&aqi=no&alerts=yes`
+                );
+                if (!response.ok) throw new Error('Error al obtener datos del clima');
+                return await response.json();
             }
         };
 
-        // Cambiar la selección de forecastList a dailyForecastList
-        const dailyForecastList = document.querySelector('.future .forecast-list');
-        const hourlyForecastList = document.querySelector('.hourly-forecast .hourly-list');
+        // UI Controller
+        const UIController = {
+            elements: {
+                search: document.getElementById('search'),
+                city: document.getElementById('city'),
+                currentTemp: document.getElementById('current-temp'),
+                weatherIcon: document.getElementById('weather-icon'),
+                weatherDescription: document.getElementById('weather-description'),
+                humidity: document.getElementById('humidity'),
+                wind: document.getElementById('wind'),
+                locationLabel: document.getElementById('location-label'),
+                hourlyList: document.querySelector('.hourly-list'),
+                forecastDays: document.querySelector('.forecast-days'),
+                alert: document.getElementById('alert'),
+                alerts: document.querySelector('.alerts')
+            },
 
-        const updateForecastUI = (forecastData) => {
-            const forecastContainer = document.querySelector('.forecast-days');
-            forecastContainer.innerHTML = '';
-
-            // Usar solo los próximos días, sin incluir el actual nuevamente
-            forecastData.slice(0, 4).forEach((day, index) => {
-                const date = new Date(day.date);
-                const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
-                const formattedDate = new Intl.DateTimeFormat('en-US', {
-                    month: 'short',
-                    day: 'numeric'
-                }).format(date);
-
-                const forecastDay = document.createElement('div');
-                forecastDay.className = `forecast-day${index === 0 ? ' today' : ''}`;
+            updateCurrentWeather(data) {
+                this.elements.city.textContent = data.location.name;
+                this.elements.currentTemp.textContent = `${Math.round(data.current.temp_c)}°C`;
+                this.elements.weatherDescription.textContent = data.current.condition.text;
+                this.elements.humidity.textContent = data.current.humidity;
+                this.elements.wind.textContent = data.current.wind_kph;
+                this.elements.locationLabel.textContent = `${data.location.name}, ${data.location.country}`;
+                this.elements.currentLoc = document.querySelector('.currentLoc');
+                this.elements.currentLoc.style.display = 'flex';
                 
-                forecastDay.innerHTML = `
-                    <div class="forecast-day-header">
-                        <div>
-                            <h4>
-                                ${index === 0 ? 'Today' : capitalizeFirstLetter(dayName)}
-                                ${index === 0 ? '<span class="today-marker">Current</span>' : ''}
-                            </h4>
-                            <span>${formattedDate}</span>
+                // Update weather icon
+                const conditionCode = data.current.condition.code;
+                this.updateWeatherIcon(this.elements.weatherIcon, conditionCode, data.current.is_day);
+            },
+
+            updateForecast(forecast) {
+                // Clear existing content
+                this.elements.hourlyList.innerHTML = '';
+                this.elements.forecastDays.innerHTML = '';
+
+                // Update hourly forecast
+                forecast.forecastday[0].hour
+                    .filter(hour => new Date(hour.time) > new Date())
+                    .slice(0, 12)
+                    .forEach(hour => {
+                        const time = new Date(hour.time).toLocaleTimeString('en-US', { 
+                            hour: '2-digit', 
+                            minute: '2-digit', 
+                            hour12: false 
+                        }); // Cambiar a formato 24h
+                        const li = document.createElement('li');
+                        li.className = 'hour';
+                        li.innerHTML = `
+                            <span>${time}</span>
+                            <i class="fas ${this.getWeatherIcon(hour.condition.code, hour.is_day)}"></i>
+                            <span class="temp">${Math.round(hour.temp_c)}°C</span>
+                        `;
+                        this.elements.hourlyList.appendChild(li);
+                    });
+
+                // Update daily forecast
+                forecast.forecastday.forEach((day, index) => {
+                    const date = new Date(day.date);
+                    const dayName = index === 0 ? 'Today' : date.toLocaleDateString('en-US', { weekday: 'short' });
+                    
+                    const forecastDay = document.createElement('div');
+                    forecastDay.className = 'forecast-day';
+                    forecastDay.innerHTML = `
+                        <div class="forecast-day-header">
+                            <h4>${dayName}</h4>
+                            <span>${Math.round(day.day.maxtemp_c)}°C / ${Math.round(day.day.mintemp_c)}°C</span>
                         </div>
-                        <div class="text-weather">
-                            <i class="${getWeatherIcon(day.day.condition.text)}"></i>
-                            <span>${day.day.condition.text}</span>
-                        </div>
-                    </div>
-                    <div class="forecast-day-details">
-                        <div class="forecast-detail">
-                            <i class="fas fa-temperature-high"></i>
-                            <span>${Math.round(day.day.maxtemp_c)}°</span>
-                        </div>
-                        <div class="forecast-detail">
-                            <i class="fas fa-temperature-low"></i>
-                            <span>${Math.round(day.day.mintemp_c)}°</span>
-                        </div>
-                        <div class="forecast-detail">
-                            <i class="fas fa-wind"></i>
-                            <span>${Math.round(day.day.maxwind_kph)}</span>
-                        </div>
-                        <div class="forecast-detail with-progress">
-                            <span>
-                                <i class="fas fa-tint"></i>
-                                ${day.day.avghumidity}%
-                            </span>
-                            <div class="humidity-bar">
-                                <div class="humidity-progress" style="width: ${day.day.avghumidity}%"></div>
+                        <div class="forecast-day-details">
+                            <div class="forecast-detail">
+                                <i class="fas ${this.getWeatherIcon(day.day.condition.code, 1)}"></i>
+                                <span>${day.day.condition.text}</span>
+                            </div>
+                            <div class="forecast-detail with-progress">
+                                <span>Rain: ${day.day.daily_chance_of_rain}%</span>
+                                <div class="humidity-bar">
+                                    <div class="humidity-progress" style="width: ${day.day.daily_chance_of_rain}%;"></div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    ${index < 3 ? '<hr>' : ''}
-                `;
-                
-                forecastContainer.appendChild(forecastDay);
-            });
-        };
-
-        // Asegurarse de que updateHourlyForecastUI usa hourlyForecastList
-        const updateHourlyForecastUI = (hourlyData) => {
-            hourlyForecastList.innerHTML = '';
-            hourlyData.slice(0, 12).forEach(hour => { // Mostrar las próximas 12 horas
-                const time = new Date(hour.time).toLocaleTimeString([], { 
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false // Usar formato 24h para ahorrar espacio
+                        <hr>
+                    `;
+                    this.elements.forecastDays.appendChild(forecastDay);
                 });
-                const iconClass = getWeatherIcon(hour.condition.text);
+            },
 
-                const li = document.createElement('li');
-                li.classList.add('hour');
-                li.innerHTML = `
-                    <h4>${time}</h4>
-                    <i class="${iconClass}"></i>
-                    <span>${Math.round(hour.temp_c)}°</span>
-                `;
-                hourlyForecastList.appendChild(li);
-            });
+            showNotification(message, type = 'info') {
+                this.elements.alert.textContent = message;
+                if (type === 'error') {
+                    this.elements.alerts.classList.add('active');
+                } else {
+                    this.elements.alerts.classList.remove('active');
+                }
+            },
+
+            getWeatherIcon(code, isDay) {
+                // Basic mapping of weather codes to Font Awesome icons
+                const iconMap = {
+                    1000: isDay ? 'fa-sun' : 'fa-moon',
+                    1003: isDay ? 'fa-cloud-sun' : 'fa-cloud-moon',
+                    1006: 'fa-cloud',
+                    1009: 'fa-cloud',
+                    1030: 'fa-smog',
+                    1063: 'fa-cloud-rain',
+                    1066: 'fa-snowflake',
+                    1087: 'fa-bolt',
+                    1183: 'fa-cloud-rain',
+                    1189: 'fa-cloud-showers-heavy',
+                    1192: 'fa-cloud-showers-heavy',
+                    1225: 'fa-snowflake',
+                    1273: 'fa-bolt',
+                    1276: 'fa-bolt'
+                };
+                return iconMap[code] || 'fa-cloud';
+            },
+
+            updateWeatherIcon(iconElement, code, isDay) {
+                // Remove existing classes except 'fas'
+                iconElement.className = 'fas';
+                // Add the new icon class
+                iconElement.classList.add(this.getWeatherIcon(code, isDay));
+            }
         };
 
-        const capitalizeFirstLetter = (string) => {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        };
+        // Event Handlers
+        const EventHandlers = {
+            async handleSearch(event) {
+                if (event.type === 'click' || event.key === 'Enter') {
+                    const city = UIController.elements.search.value.trim();
+                    if (!city) return;
 
-        const handleGeolocation = () => {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    async (position) => {
-                        const { latitude, longitude } = position.coords;
-                        actualLocation.style.display = "flex";
-                        try {
-                            await getWeatherByCoords(latitude, longitude);
-                        } catch (error) {
-                            console.error('Error getting weather data:', error);
-                            showNotification('Could not get weather data for your location');
-                            actualLocation.style.display = 'none'; // Hide if fails
-                            getWeather('Madrid'); // Default city
-                        }
-                    },
-                    (error) => {
-                        console.error('Geolocation error:', error);
-                        showNotification('Could not obtain your location. Please search for a city manually.');
-                        actualLocation.style.display = 'none'; // Hide if fails
-                        getWeather('Madrid'); // Default city
+                    try {
+                        const coords = await WeatherService.getCoordinates(city);
+                        const weatherData = await WeatherService.getWeatherData(coords.lat, coords.lon);
+                        CacheManager.set(city.toLowerCase(), weatherData);
+                        UIController.updateCurrentWeather(weatherData);
+                        UIController.updateForecast(weatherData.forecast);
+                    } catch (error) {
+                        UIController.showNotification(error.message, 'error');
                     }
-                );
-            } else {
-                showNotification('Geolocation is not supported by your browser');
-                actualLocation.style.display = 'none'; // Hide if not supported
-                getWeather('Madrid'); // Default city
+                }
+            },
+
+            async handleGeolocation() {
+                if (!navigator.geolocation) {
+                    UIController.showNotification('Geolocation no soportada');
+                    return;
+
+                }
+
+                try {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject);
+                    });
+                    
+                    const { latitude, longitude } = position.coords;
+                    const weatherData = await WeatherService.getWeatherData(latitude, longitude);
+                    UIController.updateCurrentWeather(weatherData);
+                    UIController.updateForecast(weatherData.forecast);
+                } catch (error) {
+                    UIController.showNotification('Error obteniendo ubicación');
+                    EventHandlers.handleSearch({ type: 'click' }); // Fallback a ciudad por defecto
+                }
             }
         };
 
-        const handleSearch = () => {
-            const cityValue = search.value.trim();
-            if (cityValue) {
-                // Eliminar la línea que oculta currentLoc aquí
-                getWeather(cityValue);
-                search.value = ''; // Reset search field
-            }
-        };
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event listeners
+            UIController.elements.search.addEventListener('keydown', EventHandlers.handleSearch);
+            document.querySelector('.search-btn').addEventListener('click', EventHandlers.handleSearch);
 
-        searchIcon.addEventListener('click', handleSearch);
-        search.addEventListener('keydown', (e) => { // Changed from 'keypress' to 'keydown'
-            if (e.key === 'Enter') handleSearch(); // Updated to detect Enter key correctly
+            // Start app
+            EventHandlers.handleGeolocation();
         });
-
-        window.addEventListener('load', handleGeolocation);
-
-        // Agregar estilos para las notificaciones
-        const style = document.createElement('style');
-        style.textContent = `
-            .notification {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background-color: rgba(0, 0, 0, 0.8);
-                color: #fff;
-                padding: 15px 20px;
-                border-radius: 5px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-                opacity: 0;
-                transition: opacity 0.5s ease, transform 0.5s ease;
-                z-index: 1000;
-            }
-            .notification.show {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            .notification.hide {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Definir función para mostrar notificaciones
-        const showNotification = (message, duration = 3000) => {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.classList.remove('hide');
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-                notification.classList.add('hide');
-            }, duration);
-        };
-
     </script>
 </body>
 </html>
