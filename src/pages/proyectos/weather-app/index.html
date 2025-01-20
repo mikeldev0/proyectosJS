@@ -521,6 +521,9 @@
     </footer>
 
     <script defer type="module">
+        // Añadir la declaración de weatherCache al inicio del script
+        const weatherCache = new Map();
+
         const API_KEY = '3df8a0705f2d4f9ea0b185511251801';
         const BASE_URL = 'https://api.weatherapi.com/v1';
         const GEOCODING_URL = 'https://api.weatherapi.com/v1/search.json';
@@ -539,7 +542,46 @@
         const wind = document.getElementById('wind');
         const alertContainer = document.querySelector('.alerts'); // Corregido de .aletrs a .alerts
 
-        const updateWeatherUI = (currentData, cityName, alerts, hourlyData) => {
+        // Definir la función getWeatherIcon
+        const WEATHER_ICONS = {
+            sunny: 'fas fa-sun',
+            clear: 'fas fa-sun',
+            'partly cloudy': 'fas fa-cloud-sun',
+            cloudy: 'fas fa-cloud',
+            overcast: 'fas fa-cloud',
+            mist: 'fas fa-smog',
+            fog: 'fas fa-smog',
+            'freezing fog': 'fas fa-smog',
+            'light rain': 'fas fa-cloud-rain',
+            'patchy rain possible': 'fas fa-cloud-rain',
+            'light drizzle': 'fas fa-cloud-rain',
+            'moderate rain': 'fas fa-cloud-showers-heavy',
+            rain: 'fas fa-cloud-showers-heavy',
+            'heavy rain': 'fas fa-cloud-showers-heavy',
+            'light snow': 'fas fa-snowflake',
+            'patchy snow possible': 'fas fa-snowflake',
+            snow: 'fas fa-snowflake',
+            'heavy snow': 'fas fa-snowflake',
+            sleet: 'fas fa-cloud-meatball',
+            'light sleet': 'fas fa-cloud-meatball',
+            'moderate or heavy sleet': 'fas fa-cloud-meatball',
+            'thundery outbreaks possible': 'fas fa-bolt',
+            'patchy light rain with thunder': 'fas fa-bolt',
+            'moderate or heavy rain with thunder': 'fas fa-bolt',
+            thunderstorm: 'fas fa-bolt',
+            'blowing snow': 'fas fa-wind',
+            blizzard: 'fas fa-wind',
+            'ice pellets': 'fas fa-icicles'
+        };
+
+        const DEFAULT_ICON = 'fas fa-cloud';
+
+        const getWeatherIcon = (condition) => {
+            return WEATHER_ICONS[condition.toLowerCase()] || DEFAULT_ICON;
+        };
+
+        // Actualizar la función updateWeatherUI para aceptar un parámetro 'isCurrentLocation'
+        const updateWeatherUI = (currentData, cityName, alerts, hourlyData, isCurrentLocation) => {
             city.textContent = cityName; // Display city name
             
             currentTemp.textContent = `${Math.round(currentData.temp_c)}ºC`;
@@ -550,7 +592,11 @@
             humidity.textContent = currentData.humidity; // Update humidity
             wind.textContent = `${currentData.wind_kph}`; // Update wind
 
-            actualLocation.style.display = 'flex'; // Show current location indicator
+            if (isCurrentLocation) {
+                actualLocation.style.display = 'flex'; // Mostrar indicador de ubicación actual
+            } else {
+                actualLocation.style.display = 'none'; // Ocultar indicador de ubicación actual
+            }
 
             const alertElement = document.getElementById('alert');
             if (alerts && alerts.length > 0) {
@@ -563,45 +609,11 @@
             updateHourlyForecastUI(hourlyData);
         };
 
-        const getWeatherIcon = (conditionText) => {
-            const icons = {
-                "Sunny": 'fas fa-sun',
-                "Clear": 'fas fa-sun',
-                "Partly cloudy": 'fas fa-cloud-sun',
-                "Cloudy": 'fas fa-cloud',
-                "Rain": 'fas fa-cloud-rain',
-                "Wind": 'fas fa-wind',
-                "Snow": 'fas fa-snowflake',
-                "Thunder": 'fas fa-bolt',
-                "Drizzle": 'fas fa-cloud-rain',
-                "Fog": 'fas fa-smog'
-            };
-            return icons[conditionText] || 'fas fa-cloud';
-        };
-
-        const getCoordinates = async (city) => {
-            try {
-                const response = await fetch(`${GEOCODING_URL}?key=${API_KEY}&q=${city}`);
-                if (response.status === 401) throw new Error('Invalid API key. Please check your key.');
-                if (!response.ok) throw new Error('City not found');
-                const data = await response.json();
-                if (data.length === 0) throw new Error('City not found');
-                return { lat: data[0].lat, lon: data[0].lon, name: data[0].name };
-            } catch (error) {
-                console.error('Error getting coordinates:', error);
-                alert(error.message);
-                throw error;
-            }
-        };
-
-        // Añadir un caché para almacenar los datos meteorológicos por ciudad
-        const weatherCache = new Map();
-
         const getWeather = async (city) => {
             if (weatherCache.has(city.toLowerCase())) {
                 const cachedData = weatherCache.get(city.toLowerCase());
-                updateWeatherUI(cachedData.current, cachedData.name, cachedData.alerts?.alert, cachedData.hourlyData);
-                updateForecastUI(cachedData.forecastData); // Añadir actualización de forecast
+                updateWeatherUI(cachedData.current, cachedData.name, cachedData.alerts?.alert, cachedData.hourlyData, false); // isCurrentLocation = false
+                updateForecastUI(cachedData.forecastData);
                 return;
             }
             try {
@@ -613,8 +625,8 @@
                 if (!response.ok) throw new Error('Weather data not available');
                 const data = await response.json();
                 const hourlyData = data.forecast.forecastday.flatMap(day => day.hour);
-                updateWeatherUI(data.current, name, data.alerts?.alert, hourlyData);
-                updateForecastUI(data.forecast.forecastday); // Añadir actualización de forecast
+                updateWeatherUI(data.current, name, data.alerts?.alert, hourlyData, false); // isCurrentLocation = false
+                updateForecastUI(data.forecast.forecastday);
                 // Almacenar los datos en el caché
                 weatherCache.set(city.toLowerCase(), {
                     current: data.current,
@@ -634,7 +646,7 @@
             const cacheKey = `${lat},${lon}`;
             if (weatherCache.has(cacheKey)) {
                 const cachedData = weatherCache.get(cacheKey);
-                updateWeatherUI(cachedData.current, cachedData.name, cachedData.alerts?.alert, cachedData.hourlyData);
+                updateWeatherUI(cachedData.current, cachedData.name, cachedData.alerts?.alert, cachedData.hourlyData, true); // isCurrentLocation = true
                 updateForecastUI(cachedData.forecastData);
                 return cachedData;
             }
@@ -646,7 +658,7 @@
                 if (!response.ok) throw new Error('Weather data not available');
                 const data = await response.json();
                 const hourlyData = data.forecast.forecastday.flatMap(day => day.hour);
-                updateWeatherUI(data.current, data.location.name, data.alerts?.alert, hourlyData);
+                updateWeatherUI(data.current, data.location.name, data.alerts?.alert, hourlyData, true); // isCurrentLocation = true
                 updateForecastUI(data.forecast.forecastday);
                 // Almacenar los datos en el caché
                 weatherCache.set(cacheKey, {
@@ -711,6 +723,7 @@
                 navigator.geolocation.getCurrentPosition(
                     async (position) => {
                         const { latitude, longitude } = position.coords;
+                        actualLocation.style.display = "flex";
                         try {
                             await getWeatherByCoords(latitude, longitude);
                         } catch (error) {
@@ -737,7 +750,7 @@
         const handleSearch = () => {
             const cityValue = search.value.trim();
             if (cityValue) {
-                actualLocation.style.display = 'none'; // Hide currentLoc when searching manually
+                // Eliminar la línea que oculta currentLoc aquí
                 getWeather(cityValue);
                 search.value = ''; // Reset search field
             }
