@@ -520,6 +520,9 @@
         </div>
     </footer>
 
+    <!-- Agregar contenedor para notificaciones -->
+    <div id="notification" class="notification"></div>
+
     <script defer type="module">
         // Añadir la declaración de weatherCache al inicio del script
         const weatherCache = new Map();
@@ -580,6 +583,21 @@
             return WEATHER_ICONS[condition.toLowerCase()] || DEFAULT_ICON;
         };
 
+        // Definir la función getCoordinates
+        const getCoordinates = async (city) => {
+            try {
+                const response = await fetch(`${GEOCODING_URL}?key=${API_KEY}&q=${encodeURIComponent(city)}`);
+                if (!response.ok) throw new Error('Error al obtener las coordenadas.');
+                const data = await response.json();
+                if (data.length === 0) throw new Error('No se encontraron coordenadas para la ciudad proporcionada.');
+                const { lat, lon, name } = data[0];
+                return { lat, lon, name };
+            } catch (error) {
+                console.error('Error obteniendo coordenadas:', error);
+                throw error;
+            }
+        };
+
         // Actualizar la función updateWeatherUI para aceptar un parámetro 'isCurrentLocation'
         const updateWeatherUI = (currentData, cityName, alerts, hourlyData, isCurrentLocation) => {
             city.textContent = cityName; // Display city name
@@ -638,7 +656,7 @@
                 search.value = ''; // Reset search field
             } catch (error) {
                 console.error('Error getting weather:', error);
-                alert(error.message);
+                showNotification(error.message);
             }
         };
 
@@ -671,7 +689,7 @@
                 return data;
             } catch (error) {
                 console.error('Error getting weather:', error);
-                alert(error.message);
+                showNotification(error.message);
             }
         };
 
@@ -728,20 +746,20 @@
                             await getWeatherByCoords(latitude, longitude);
                         } catch (error) {
                             console.error('Error getting weather data:', error);
-                            alert('Could not get weather data for your location');
+                            showNotification('Could not get weather data for your location');
                             actualLocation.style.display = 'none'; // Hide if fails
                             getWeather('Madrid'); // Default city
                         }
                     },
                     (error) => {
                         console.error('Geolocation error:', error);
-                        alert('Could not obtain your location. Please search for a city manually.');
+                        showNotification('Could not obtain your location. Please search for a city manually.');
                         actualLocation.style.display = 'none'; // Hide if fails
                         getWeather('Madrid'); // Default city
                     }
                 );
             } else {
-                alert('Geolocation is not supported by your browser');
+                showNotification('Geolocation is not supported by your browser');
                 actualLocation.style.display = 'none'; // Hide if not supported
                 getWeather('Madrid'); // Default city
             }
@@ -762,6 +780,46 @@
         });
 
         window.addEventListener('load', handleGeolocation);
+
+        // Agregar estilos para las notificaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: rgba(0, 0, 0, 0.8);
+                color: #fff;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                opacity: 0;
+                transition: opacity 0.5s ease, transform 0.5s ease;
+                z-index: 1000;
+            }
+            .notification.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .notification.hide {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Definir función para mostrar notificaciones
+        const showNotification = (message, duration = 3000) => {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.remove('hide');
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+                notification.classList.add('hide');
+            }, duration);
+        };
+
     </script>
 </body>
 </html>
