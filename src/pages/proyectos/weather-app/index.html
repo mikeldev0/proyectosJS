@@ -452,6 +452,22 @@
         .alerts.active { /* Corregido de .aletrs.active a .alerts.active */
             display: block; /* Muestra el contenedor de alertas cuando hay alertas */
         }
+
+        /* Clases para diferentes condiciones climáticas */
+        .snow {
+            background-color: rgba(255, 255, 255, 0.5);
+            background-blend-mode: lighten;
+        }
+
+        .rain {
+            background-color: rgba(128, 128, 128, 0.5);
+            background-blend-mode: darken;
+        }
+
+        .storm {
+            background-color: rgba(64, 64, 64, 0.7);
+            background-blend-mode: darken;
+        }
     </style>
     <a href="./weather-app">
         <h1>Weather</h1>
@@ -625,6 +641,19 @@
             }
 
             updateHourlyForecastUI(hourlyData);
+
+            // Cambiar la clase del body según la condición del clima
+            const body = document.body;
+            body.classList.remove('snow', 'rain', 'storm'); // Eliminar clases anteriores
+
+            const condition = currentData.condition.text.toLowerCase();
+            if (condition.includes('snow')) {
+                body.classList.add('snow');
+            } else if (condition.includes('rain')) {
+                body.classList.add('rain');
+            } else if (condition.includes('storm') || condition.includes('thunder')) {
+                body.classList.add('storm');
+            }
         };
 
         const getWeather = async (city) => {
