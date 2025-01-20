@@ -508,15 +508,34 @@
         }
 
         .alert.active {
-            display: block; /* Mostrar cuando hay alertas */
+            display: block; 
         }
 
-        .alerts { /* Corregido de .aletrs a .alerts */
-            display: none; /* Oculta el contenedor de alertas por defecto */
+        .weather-alerts {
+            display: none;
+            color: rgba(255, 255, 255, 0.9);
         }
-        
-        .alerts.active { /* Corregido de .aletrs.active a .alerts.active */
-            display: block; /* Muestra el contenedor de alertas cuando hay alertas */
+
+        .weather-alerts.active {
+            display: block;
+        }
+
+        /* Estilos para notificaciones de errores */
+        .notification {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 0, 0, 0.8);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+
+        .notification.active {
+            display: block;
         }
 
         /* Clases para diferentes condiciones climáticas */
@@ -1023,26 +1042,6 @@
             font-size: 0.9rem;
             }
         }
-
-        /* 2. Mostrar el mensaje de alerta */
-        .alerts {
-            display: none; /* ...existing code... */
-            /* Añadir estilos para la posición */
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(255, 0, 0, 0.8);
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 1000;
-        }
-
-        .alerts.active {
-            display: block; /* ...existing code... */
-        }
-
         /* 3. Recuperar la barra de progreso de la lluvia */
         .forecast-detail.with-progress {
             flex-direction: row;
@@ -1133,6 +1132,28 @@
         .search-btn {
             border: none;
         }
+
+        .weather-alerts {
+            display: none;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .weather-alerts.active {
+            display: block;
+        }
+
+        .alert {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert i {
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
@@ -1168,8 +1189,8 @@
 
         <!-- Mover la sección de pronóstico horario encima de la sección de pronóstico de días -->
         <section class="container hourly-forecast">
-            <div class="alerts">
-                <p class="alert" id="alert"></p>
+            <div class="weather-alerts">
+                <p class="alert" id="alert">Prueba</p>
                 <hr>
             </div>
             <h3>Next 12 Hours</h3>
@@ -1258,7 +1279,8 @@
                 hourlyList: document.querySelector('.hourly-list'),
                 forecastDays: document.querySelector('.forecast-days'),
                 alert: document.getElementById('alert'),
-                alerts: document.querySelector('.alerts')
+                weatherAlerts: document.querySelector('.weather-alerts'),
+                notification: document.getElementById('notification')
             },
 
             updateCurrentWeather(data) {
@@ -1329,14 +1351,44 @@
                     `;
                     this.elements.forecastDays.appendChild(forecastDay);
                 });
+
+                // Manejar alertas meteorológicas
+                if (forecast.alerts && forecast.alerts.alert && forecast.alerts.alert.length > 0) {
+                    const alerts = forecast.alerts.alert;
+                    const alertMessages = alerts.map(alert => {
+                        let iconClass;
+                        switch(alert.severity?.toLowerCase()) {
+                            case 'moderate':
+                                iconClass = 'fas fa-exclamation-circle text-warning';
+                                break;
+                            case 'severe':
+                                iconClass = 'fas fa-exclamation-triangle text-danger';
+                                break;
+                            case 'minor':
+                                iconClass = 'fas fa-info-circle text-info';
+                                break;
+                            default:
+                                iconClass = 'fas fa-exclamation-circle';
+                        }
+                        return `<i class="${iconClass}"></i> ${alert.event}: ${alert.headline}`;
+                    }).join('<br>');
+                    
+                    this.elements.alert.innerHTML = alertMessages;
+                    this.elements.weatherAlerts.classList.add('active');
+                } else {
+                    this.elements.weatherAlerts.classList.remove('active');
+                }
             },
 
             showNotification(message, type = 'info') {
-                this.elements.alert.textContent = message;
                 if (type === 'error') {
-                    this.elements.alerts.classList.add('active');
+                    this.elements.notification.textContent = message;
+                    this.elements.notification.classList.add('active');
+                    setTimeout(() => {
+                        this.elements.notification.classList.remove('active');
+                    }, 5000); // Duración de 5 segundos
                 } else {
-                    this.elements.alerts.classList.remove('active');
+                    this.elements.notification.classList.remove('active');
                 }
             },
 
@@ -1383,16 +1435,15 @@
                         UIController.updateCurrentWeather(weatherData);
                         UIController.updateForecast(weatherData.forecast);
                     } catch (error) {
-                        UIController.showNotification(error.message, 'error');
+                        UIController.showNotification('Error al buscar la ciudad.', 'error');
                     }
                 }
             },
 
             async handleGeolocation() {
                 if (!navigator.geolocation) {
-                    UIController.showNotification('Geolocation no soportada');
+                    UIController.showNotification('Geolocalización no disponible. Usando ubicación por defecto.', 'error');
                     return;
-
                 }
 
                 try {
@@ -1402,11 +1453,26 @@
                     
                     const { latitude, longitude } = position.coords;
                     const weatherData = await WeatherService.getWeatherData(latitude, longitude);
+                    
+                    if (!weatherData) {
+                        throw new Error('No se pudieron obtener los datos del clima');
+                    }
+
                     UIController.updateCurrentWeather(weatherData);
-                    UIController.updateForecast(weatherData.forecast);
+                    UIController.updateForecast(weatherData);
                 } catch (error) {
-                    UIController.showNotification('Error obteniendo ubicación');
-                    EventHandlers.handleSearch({ type: 'click' }); // Fallback a ciudad por defecto
+                    console.error('Error:', error);
+                    UIController.showNotification('No se pudo obtener la ubicación actual. Usando ubicación por defecto.', 'error');
+                    // Intentar con la ciudad por defecto
+                    try {
+                        const coords = await WeatherService.getCoordinates(CONFIG.DEFAULT_CITY);
+                        const weatherData = await WeatherService.getWeatherData(coords.lat, coords.lon);
+                        UIController.updateCurrentWeather(weatherData);
+                        UIController.updateForecast(weatherData);
+                    } catch (fallbackError) {
+                        console.error('Fallback Error:', fallbackError);
+                        UIController.showNotification('No se pudieron obtener los datos del clima.', 'error');
+                    }
                 }
             }
         };
