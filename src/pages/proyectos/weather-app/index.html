@@ -1154,6 +1154,35 @@
         .alert i {
             font-size: 1.1rem;
         }
+
+        /* Estilos actualizados para las alertas */
+        .weather-alerts {
+            margin-bottom: 1rem;
+        }
+
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .alert i {
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+        }
+
+        .alert strong {
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .alert small {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -1298,13 +1327,13 @@
                 this.updateWeatherIcon(this.elements.weatherIcon, conditionCode, data.current.is_day);
             },
 
-            updateForecast(forecast) {
+            updateForecast(data) {
                 // Clear existing content
                 this.elements.hourlyList.innerHTML = '';
                 this.elements.forecastDays.innerHTML = '';
 
                 // Update hourly forecast
-                forecast.forecastday[0].hour
+                data.forecast.forecastday[0].hour
                     .filter(hour => new Date(hour.time) > new Date())
                     .slice(0, 12)
                     .forEach(hour => {
@@ -1324,7 +1353,7 @@
                     });
 
                 // Update daily forecast
-                forecast.forecastday.forEach((day, index) => {
+                data.forecast.forecastday.forEach((day, index) => {
                     const date = new Date(day.date);
                     const dayName = index === 0 ? 'Today' : date.toLocaleDateString('en-US', { weekday: 'short' });
                     
@@ -1353,29 +1382,41 @@
                 });
 
                 // Manejar alertas meteorológicas
-                if (forecast.alerts && forecast.alerts.alert && forecast.alerts.alert.length > 0) {
-                    const alerts = forecast.alerts.alert;
-                    const alertMessages = alerts.map(alert => {
-                        let iconClass;
-                        switch(alert.severity?.toLowerCase()) {
-                            case 'moderate':
-                                iconClass = 'fas fa-exclamation-circle text-warning';
-                                break;
-                            case 'severe':
-                                iconClass = 'fas fa-exclamation-triangle text-danger';
-                                break;
-                            case 'minor':
-                                iconClass = 'fas fa-info-circle text-info';
-                                break;
-                            default:
-                                iconClass = 'fas fa-exclamation-circle';
-                        }
-                        return `<i class="${iconClass}"></i> ${alert.event}: ${alert.headline}`;
-                    }).join('<br>');
+                if (data.alerts && Array.isArray(data.alerts.alert) && data.alerts.alert.length > 0) {
+                    const alert = data.alerts.alert[0]; // Tomar solo la primera alerta
+                    let iconClass;
                     
-                    this.elements.alert.innerHTML = alertMessages;
+                    switch (alert.severity.toLowerCase()) {
+                        case 'moderate':
+                            iconClass = 'fas fa-exclamation-circle';
+                            break;
+                        case 'severe':
+                            iconClass = 'fas fa-exclamation-triangle';
+                            break;
+                        case 'minor':
+                            iconClass = 'fas fa-info-circle';
+                            break;
+                        default:
+                            iconClass = 'fas fa-exclamation-circle';
+                    }
+
+                    const expires = new Date(alert.expires).toLocaleDateString('es-ES', {
+                        day: 'numeric',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    this.elements.alert.innerHTML = `
+                        <i class="${iconClass}"></i>
+                        <div>
+                            <strong>${alert.event}</strong>
+                            <small>Until ${expires}</small>
+                        </div>`;
+                    this.elements.alert.style.display = 'flex';
                     this.elements.weatherAlerts.classList.add('active');
                 } else {
+                    this.elements.alert.style.display = 'none';
                     this.elements.weatherAlerts.classList.remove('active');
                 }
             },
@@ -1433,7 +1474,7 @@
                         const weatherData = await WeatherService.getWeatherData(coords.lat, coords.lon);
                         CacheManager.set(city.toLowerCase(), weatherData);
                         UIController.updateCurrentWeather(weatherData);
-                        UIController.updateForecast(weatherData.forecast);
+                        UIController.updateForecast(weatherData);
                     } catch (error) {
                         UIController.showNotification('Error al buscar la ciudad.', 'error');
                     }
