@@ -811,6 +811,93 @@
                 font-size: 0.75rem;
             }
         }
+
+        .humidity-bar {
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin-top: 2px;
+            overflow: hidden;
+        }
+
+        .humidity-progress {
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.7);
+            transition: width 0.3s ease;
+            max-width: 100%;
+        }
+
+        .forecast-detail.with-progress {
+            flex-direction: row;
+            width: 100%;
+            gap: 4px;
+        }
+
+        .forecast-detail.with-progress span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .forecast-day-details {
+            display: grid;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            align-items: center;
+        }
+
+        /* Desktop layout */
+        @media (min-width: 769px) {
+            .forecast-day-details {
+            grid-template-columns: repeat(4, 1fr);
+            }
+
+            .forecast-detail.with-progress {
+            grid-column: span 1;
+            }
+
+            .humidity-bar {
+            height: 4px;
+            }
+        }
+
+        /* Tablet layout */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .forecast-day-details {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            }
+
+            .forecast-detail.with-progress {
+            grid-column: span 2;
+            }
+        }
+
+        /* Mobile layout */
+        @media (max-width: 480px) {
+            .forecast-day-details {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            }
+
+            .forecast-detail.with-progress {
+            grid-column: span 2;
+            }
+
+            .humidity-bar {
+            height: 3px;
+            }
+
+            .forecast-detail.with-progress {
+            gap: 2px;
+            }
+
+            .forecast-detail span {
+            font-size: 0.8rem;
+            }
+        }
     </style>
     <a href="./weather-app">
         <h1>Weather</h1>
@@ -1058,7 +1145,7 @@
             forecastContainer.innerHTML = '';
 
             // Usar solo los próximos días, sin incluir el actual nuevamente
-            forecastData.slice(0, 3).forEach((day, index) => {
+            forecastData.slice(0, 4).forEach((day, index) => {
                 const date = new Date(day.date);
                 const dayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date);
                 const formattedDate = new Intl.DateTimeFormat('en-US', {
@@ -1093,12 +1180,17 @@
                             <span>${Math.round(day.day.mintemp_c)}°</span>
                         </div>
                         <div class="forecast-detail">
-                            <i class="fas fa-tint"></i>
-                            <span>${day.day.avghumidity}%</span>
-                        </div>
-                        <div class="forecast-detail">
                             <i class="fas fa-wind"></i>
                             <span>${Math.round(day.day.maxwind_kph)}</span>
+                        </div>
+                        <div class="forecast-detail with-progress">
+                            <span>
+                                <i class="fas fa-tint"></i>
+                                ${day.day.avghumidity}%
+                            </span>
+                            <div class="humidity-bar">
+                                <div class="humidity-progress" style="width: ${day.day.avghumidity}%"></div>
+                            </div>
                         </div>
                     </div>
                     ${index < 3 ? '<hr>' : ''}
