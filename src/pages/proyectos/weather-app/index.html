@@ -1183,6 +1183,128 @@
         .alert small {
             opacity: 0.8;
         }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .detail-item i {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .detail-item span {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .detail-item strong {
+            font-size: 1.1rem;
+        }
+
+        .favorites {
+            margin-top: 1rem;
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .favorite-location {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .favorite-location:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .favorite-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .favorite-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .remove-favorite {
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .remove-favorite:hover {
+            color: #ff7676;
+        }
+
+        /* Ajustes responsive */
+        @media (max-width: 480px) {
+            .favorites-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .favorite-location {
+                padding: 0.5rem;
+            }
+
+            .favorite-btn {
+                padding: 0.6rem;
+            }
+        }
+
+        .remove-favorite {
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #fff;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s;
+        }
+
+        .remove-favorite:hover {
+            color: #ff7676;
+        }
+
+        .remove-favorite i {
+            font-size: 1.2rem;
+            pointer-events: none; /* Importante: evita problemas de delegación de eventos */
+        }
     </style>
 </head>
 <body>
@@ -1218,6 +1340,30 @@
             </div>
         </section>
 
+        <!-- Agregar después del container temperature -->
+        <section class="container details-grid">
+            <div class="detail-item">
+                <i class="fas fa-thermometer-half"></i>
+                <span>Feels Like</span>
+                <strong id="feels-like">--</strong>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-compress-arrows-alt"></i>
+                <span>Pressure</span>
+                <strong id="pressure">--</strong>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-eye"></i>
+                <span>Visibility</span>
+                <strong id="visibility">--</strong>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-sun"></i>
+                <span>UV Index</span>
+                <strong id="uv-index">--</strong>
+            </div>
+        </section>
+
         <!-- Mover la sección de pronóstico horario encima de la sección de pronóstico de días -->
         <section class="container hourly-forecast">
             <div class="weather-alerts">
@@ -1237,6 +1383,17 @@
             <div class="forecast-days">
                 <!-- El contenido se generará dinámicamente -->
             </div>
+        </section>
+
+        <!-- Agregar antes del footer -->
+        <section class="container favorites">
+            <h3>Favorite Locations</h3>
+            <div class="favorites-grid" id="favorites-list">
+                <!-- Se llenará dinámicamente -->
+            </div>
+            <button id="add-favorite" class="favorite-btn">
+                <i class="fas fa-plus"></i> Add Current Location
+            </button>
         </section>
 
         <footer>
@@ -1293,6 +1450,26 @@
                 );
                 if (!response.ok) throw new Error('Error al obtener datos del clima');
                 return await response.json();
+            },
+
+            getFavorites() {
+                return JSON.parse(localStorage.getItem('weatherFavorites') || '[]');
+            },
+
+            addToFavorites(location) {
+                const favorites = this.getFavorites();
+                if (!favorites.some(fav => fav.name === location.name)) {
+                    favorites.push(location);
+                    localStorage.setItem('weatherFavorites', JSON.stringify(favorites));
+                    return true;
+                }
+                return false;
+            },
+
+            removeFromFavorites(locationName) {
+                const favorites = this.getFavorites();
+                const updated = favorites.filter(fav => fav.name !== locationName);
+                localStorage.setItem('weatherFavorites', JSON.stringify(updated));
             }
         };
 
@@ -1423,6 +1600,31 @@
                 }
             },
 
+            updateDetailedInfo(data) {
+                document.getElementById('feels-like').textContent = `${Math.round(data.current.feelslike_c)}°C`;
+                document.getElementById('pressure').textContent = `${data.current.pressure_mb} mb`;
+                document.getElementById('visibility').textContent = `${data.current.vis_km} km`;
+                document.getElementById('uv-index').textContent = data.current.uv;
+            },
+
+            updateFavorites() {
+                const favorites = WeatherService.getFavorites();
+                const container = document.getElementById('favorites-list');
+                container.innerHTML = '';
+
+                favorites.forEach(location => {
+                    const div = document.createElement('div');
+                    div.className = 'favorite-location';
+                    div.innerHTML = `
+                        <span>${location.name}, ${location.country}</span>
+                        <button class="remove-favorite" data-name="${location.name}" aria-label="Remove from favorites">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                        </button>
+                    `;
+                    container.appendChild(div);
+                });
+            },
+
             showNotification(message, type = 'info') {
                 if (type === 'error') {
                     this.elements.notification.textContent = message;
@@ -1477,6 +1679,7 @@
                         CacheManager.set(city.toLowerCase(), weatherData);
                         UIController.updateCurrentWeather(weatherData);
                         UIController.updateForecast(weatherData);
+                        UIController.updateDetailedInfo(weatherData);
                     } catch (error) {
                         UIController.showNotification('Error al buscar la ciudad.', 'error');
                     }
@@ -1503,6 +1706,7 @@
 
                     UIController.updateCurrentWeather(weatherData);
                     UIController.updateForecast(weatherData);
+                    UIController.updateDetailedInfo(weatherData);
                 } catch (error) {
                     console.error('Error:', error);
                     UIController.showNotification('No se pudo obtener la ubicación actual. Usando ubicación por defecto.', 'error');
@@ -1512,6 +1716,7 @@
                         const weatherData = await WeatherService.getWeatherData(coords.lat, coords.lon);
                         UIController.updateCurrentWeather(weatherData);
                         UIController.updateForecast(weatherData);
+                        UIController.updateDetailedInfo(weatherData);
                     } catch (fallbackError) {
                         console.error('Fallback Error:', fallbackError);
                         UIController.showNotification('No se pudieron obtener los datos del clima.', 'error');
@@ -1525,6 +1730,34 @@
             // Event listeners
             UIController.elements.search.addEventListener('keydown', EventHandlers.handleSearch);
             document.querySelector('.search-btn').addEventListener('click', EventHandlers.handleSearch);
+
+            document.getElementById('add-favorite').addEventListener('click', () => {
+                const currentLocation = {
+                    name: document.getElementById('city').textContent,
+                    country: document.querySelector('.currentLoc span').textContent.split(', ')[1]
+                };
+                
+                if (WeatherService.addToFavorites(currentLocation)) {
+                    UIController.showNotification('Location added to favorites!');
+                    UIController.updateFavorites();
+                } else {
+                    UIController.showNotification('Location already in favorites!', 'error');
+                }
+            });
+
+            document.getElementById('favorites-list').addEventListener('click', async (e) => {
+                // Buscar el botón más cercano con la clase remove-favorite
+                const removeButton = e.target.closest('.remove-favorite');
+                if (removeButton) {
+                    const locationName = removeButton.dataset.name;
+                    WeatherService.removeFromFavorites(locationName);
+                    UIController.updateFavorites();
+                    UIController.showNotification('Location removed from favorites!');
+                }
+            });
+
+            // Inicializar favoritos
+            UIController.updateFavorites();
 
             // Start app
             EventHandlers.handleGeolocation();
