@@ -37,7 +37,7 @@ ProyectosJS es una colección de proyectos web interactivos desarrollados con Ja
 
 1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/byronndev/proyectosjs.git
+git clone https://github.com/mikeldev0/proyectosjs.git
 ```
 
 2. **Instalar dependencias**
