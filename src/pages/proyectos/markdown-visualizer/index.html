@@ -741,6 +741,8 @@
     </main>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
     const fileInput = document.getElementById('fileInput');
     const markdownInput = document.getElementById('markdownInput');
@@ -748,9 +750,11 @@
     const errorMessage = document.getElementById('errorMessage');
     const errorMessagesContainer = document.querySelector('.error-messages');
 
+    const sanitizeMarkdownToHtml = (markdown) => DOMPurify.sanitize(marked.parse(markdown));
+
     const renderMarkdown = (markdown) => {
         try {
-            const parsedHtml = DOMPurify.sanitize(marked.parse(markdown));
+            const parsedHtml = sanitizeMarkdownToHtml(markdown);
             markdownOutput.innerHTML = parsedHtml;
             markdownOutput.hidden = !markdown.trim();
             errorMessage.style.display = 'none';
@@ -853,21 +857,38 @@
         }
     };
 
+    const buildDocumentHtml = () => {
+        const markdown = markdownInput.value;
+        const sanitizedHtml = sanitizeMarkdownToHtml(markdown);
+
+        return {
+            markdown,
+            sanitizedHtml,
+            fullHtml: `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Documento Markdown</title></head><body>${sanitizedHtml}</body></html>`
+        };
+    };
+
     // Función para exportar a PDF
     const exportToPDF = () => {
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const markdown = markdownInput.value;
-        const parsedHtml = marked.parse(markdown);
-        doc.text(parsedHtml, 10, 10);
-        doc.save('documento.pdf');
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+        const { sanitizedHtml } = buildDocumentHtml();
+
+        const tempContainer = document.createElement('div');
+        tempContainer.innerHTML = sanitizedHtml;
+
+        doc.html(tempContainer, {
+            callback: () => doc.save('documento.pdf'),
+            margin: [20, 20, 20, 20],
+            autoPaging: 'text',
+            html2canvas: { scale: 0.8 }
+        });
     };
 
     // Función para exportar a HTML
     const exportToHTML = () => {
-        const markdown = markdownInput.value;
-        const htmlContent = marked.parse(markdown);
-        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const { fullHtml } = buildDocumentHtml();
+        const blob = new Blob([fullHtml], { type: 'text/html' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = 'documento.html';
@@ -877,9 +898,8 @@
 
     // Función para exportar a Word
     const exportToWord = () => {
-        const markdown = markdownInput.value;
-        const htmlContent = marked.parse(markdown);
-        const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+        const { fullHtml } = buildDocumentHtml();
+        const blob = new Blob(['\ufeff', fullHtml], { type: 'application/msword' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = 'documento.doc';
@@ -889,7 +909,7 @@
 
     // Función para exportar a Markdown
     const exportToMarkdown = () => {
-        const markdown = markdownInput.value;
+        const { markdown } = buildDocumentHtml();
         const blob = new Blob([markdown], { type: 'text/markdown' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -905,6 +925,4 @@
     document.getElementById('exportWordBtn').addEventListener('click', exportToWord);
     document.getElementById('exportMarkdownBtn').addEventListener('click', exportToMarkdown);
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </html>
