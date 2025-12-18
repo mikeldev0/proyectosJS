@@ -750,6 +750,8 @@
     const errorMessage = document.getElementById('errorMessage');
     const errorMessagesContainer = document.querySelector('.error-messages');
 
+    marked.setOptions({ gfm: true, breaks: true });
+
     const sanitizeMarkdownToHtml = (markdown) => DOMPurify.sanitize(marked.parse(markdown));
 
     const renderMarkdown = (markdown) => {
@@ -860,11 +862,27 @@
     const buildDocumentHtml = () => {
         const markdown = markdownInput.value;
         const sanitizedHtml = sanitizeMarkdownToHtml(markdown);
+        const baseStyles = `
+            <style>
+                body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; font-size: 16px; color: #1a1a1a; }
+                h1 { font-size: 2em; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.3em; }
+                h2 { font-size: 1.5em; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.3em; }
+                h3 { font-size: 1.3em; }
+                p { margin: 0.8em 0; }
+                ul, ol { margin: 1em 0; padding-left: 1.5em; }
+                blockquote { border-left: 4px solid #e2e8f0; margin: 1em 0; padding: 0.5em 1em; color: #4a5568; }
+                pre { background-color: #f6f8fa; padding: 1em; border-radius: 6px; border: 1px solid #e2e8f0; overflow-x: auto; }
+                code { background-color: #f6f8fa; padding: 0.2em 0.4em; border-radius: 4px; }
+                img { max-width: 100%; height: auto; border-radius: 4px; }
+                hr { border: none; height: 2px; background: #e2e8f0; margin: 2em 0; border-radius: 2px; }
+                a { color: #3182ce; text-decoration: none; }
+            </style>
+        `;
 
         return {
             markdown,
             sanitizedHtml,
-            fullHtml: `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Documento Markdown</title></head><body>${sanitizedHtml}</body></html>`
+            fullHtml: `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Documento Markdown</title>${baseStyles}</head><body>${sanitizedHtml}</body></html>`
         };
     };
 
@@ -875,13 +893,20 @@
         const { sanitizedHtml } = buildDocumentHtml();
 
         const tempContainer = document.createElement('div');
+        tempContainer.style.position = 'fixed';
+        tempContainer.style.left = '-9999px';
+        tempContainer.style.top = '0';
         tempContainer.innerHTML = sanitizedHtml;
+        document.body.appendChild(tempContainer);
 
         doc.html(tempContainer, {
-            callback: () => doc.save('documento.pdf'),
+            callback: () => {
+                doc.save('documento.pdf');
+                document.body.removeChild(tempContainer);
+            },
             margin: [20, 20, 20, 20],
             autoPaging: 'text',
-            html2canvas: { scale: 0.8 }
+            html2canvas: { scale: 0.9 }
         });
     };
 
