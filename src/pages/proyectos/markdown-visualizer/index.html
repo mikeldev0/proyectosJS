@@ -11,6 +11,7 @@
     <link rel="canonical" href="https://proyectosjs.mikeldev.com/proyectos/markdown-visualizer">
     <link rel="shortcut icon" href="/public/proyectos/md_visualizer.svg" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/md-to-pdf@5.2.5/markdown.css">
     <title>Markdown Visualizer - Real-time Editor</title>
     <style>
         * {
@@ -742,9 +743,8 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.5/purify.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.4.1/html-docx.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
     const fileInput = document.getElementById('fileInput');
     const markdownInput = document.getElementById('markdownInput');
@@ -862,7 +862,7 @@
     };
 
     const buildDocumentHtml = () => {
-        const markdown = markdownInput.value;
+        const markdown = markdownInput.value.trim();
         const sanitizedHtml = sanitizeMarkdownToHtml(markdown);
         const baseStyles = `
             <style>
@@ -881,36 +881,41 @@
             </style>
         `;
 
+        const wordDocNamespaces = 'xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"';
+
         return {
             markdown,
             sanitizedHtml,
             baseStyles,
-            fullHtml: `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Documento Markdown</title>${baseStyles}</head><body>${sanitizedHtml}</body></html>`
+            wordDocNamespaces,
+            fullHtml: `<!DOCTYPE html><html ${wordDocNamespaces}><head><meta charset="UTF-8"><title>Documento Markdown</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/md-to-pdf@5.2.5/markdown.css">${baseStyles}</head><body>${sanitizedHtml}</body></html>`
         };
     };
 
-    // Función para exportar a PDF
+    // Función para exportar a PDF usando md-to-pdf desde CDN (estilos) y html2pdf para generar el archivo en el navegador
     const exportToPDF = () => {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
         const { sanitizedHtml, baseStyles } = buildDocumentHtml();
-
         const tempContainer = document.createElement('div');
         tempContainer.style.position = 'fixed';
         tempContainer.style.left = '-9999px';
         tempContainer.style.top = '0';
-        tempContainer.style.width = '595pt';
-        tempContainer.innerHTML = `${baseStyles}${sanitizedHtml}`;
+        tempContainer.style.width = '794px';
+        tempContainer.innerHTML = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/md-to-pdf@5.2.5/markdown.css">${baseStyles}<article class="markdown-body">${sanitizedHtml}</article>`;
         document.body.appendChild(tempContainer);
 
-        doc.html(tempContainer, {
-            callback: () => {
-                doc.save('documento.pdf');
-                document.body.removeChild(tempContainer);
-            },
-            margin: [20, 20, 20, 20],
-            autoPaging: 'text',
-            html2canvas: { scale: 1 }
+        const pdfOptions = {
+            margin:       10,
+            filename:     'documento.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, useCORS: true },
+            jsPDF:        { unit: 'pt', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().from(tempContainer).set(pdfOptions).save().then(() => {
+            document.body.removeChild(tempContainer);
+        }).catch(() => {
+            document.body.removeChild(tempContainer);
+            alert('No se pudo exportar el PDF. Inténtalo nuevamente.');
         });
     };
 
@@ -928,7 +933,7 @@
     // Función para exportar a Word
     const exportToWord = () => {
         const { fullHtml } = buildDocumentHtml();
-        const blob = window.HTMLDocx.asBlob(fullHtml);
+        const blob = window.HTMLDocx.asBlob(fullHtml, { orientation: 'portrait' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = 'documento.docx';
